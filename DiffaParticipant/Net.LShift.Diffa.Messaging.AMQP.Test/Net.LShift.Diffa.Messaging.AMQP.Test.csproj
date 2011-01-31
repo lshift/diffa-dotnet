@@ -41,6 +41,9 @@
     <Reference Include="RabbitMQ.Client.MessagePatterns, Version=1.1.0.0, Culture=neutral, PublicKeyToken=9a7c71af6e5c398b, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\AppData\Local\WebGAC\Repository\RabbitMQ.Client.MessagePatterns\1.1.0.0_Release\RabbitMQ.Client.MessagePatterns.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\AppData\Local\WebGAC\Repository\Rhino.Mocks\3.6.0.0_Release\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

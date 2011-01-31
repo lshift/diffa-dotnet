@@ -17,6 +17,7 @@
 using System;
 
 using NUnit.Framework;
+using Rhino.Mocks;
 
 using RabbitMQ.Client;
 using RabbitMQ.Client.MessagePatterns.Configuration;
@@ -30,6 +31,8 @@ namespace Net.LShift.Diffa.Messaging.AMQP.Test
     public class AmqpEndToEndTest
     {
 
+        private MockRepository mockery = new MockRepository();
+
         [Test]
         public void ServerCanStartAndDispose()
         {
@@ -37,18 +40,10 @@ namespace Net.LShift.Diffa.Messaging.AMQP.Test
             // TODO this assumes Rabbit is running on the named endpoint; could boot up a Rabbit instance on localhost instead
             var connectionBuilder = new ConnectionBuilder(new ConnectionFactory(), new AmqpTcpEndpoint("mrnoisy.lshift.net"));
             var connector = Factory.CreateConnector(connectionBuilder);
-            var handler = new DummyHandler();
+            var handler = mockery.StrictMock<IJsonRpcHandler>();
             using (var server = new AmqpRpcServer(connector, "DUMMY_QUEUE_NAME", handler))
             {
                 server.Start();
-            }
-        }
-
-        internal class DummyHandler : IJsonRpcHandler
-        {
-            public JsonTransportResponse HandleRequest(JsonTransportRequest request)
-            {
-                throw new NotImplementedException();
             }
         }
 
