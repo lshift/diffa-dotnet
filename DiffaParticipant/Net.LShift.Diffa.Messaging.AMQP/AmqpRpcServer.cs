@@ -78,7 +78,14 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 
         private IReceivedMessage Receive()
         {
-            return _messaging.Receive(100);
+            try
+            {
+                return _messaging.Receive(100);
+            }
+            catch (EndOfStreamException)
+            {
+                throw new AmqpException();
+            }
         }
 
         private void Ack(IReceivedMessage message)
@@ -117,6 +124,8 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             return messaging;
         }
 
+        internal class AmqpException : Exception {}
+
         private void WorkerLoop()
         {
             while (true)
@@ -128,7 +137,14 @@ namespace Net.LShift.Diffa.Messaging.Amqp
                         return;
                     }
                 }
-                ReceiveHandleAckReply();
+                try
+                {
+                    ReceiveHandleAckReply();
+                }
+                catch (AmqpException)
+                {
+                    // just do nothing on this iteration
+                }
             }
         }
 
