@@ -22,5 +22,6 @@ namespace Net.LShift.Diffa.Participants
     {
         List<AggregateDigest> QueryAggregateDigests();
         List<EntityVersion> QueryEntityVersions();
+        // TODO arguments in method signatures
     }
 }

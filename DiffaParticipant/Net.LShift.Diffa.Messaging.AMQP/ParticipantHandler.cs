@@ -14,7 +14,6 @@
 // limitations under the License.
 //
 
-using System;
 using Net.LShift.Diffa.Participants;
 using Newtonsoft.Json.Linq;
 
@@ -31,7 +30,13 @@ namespace Net.LShift.Diffa.Messaging.AMQP
 
         public JsonTransportResponse HandleRequest(JsonTransportRequest request)
         {
-            throw new NotImplementedException();
+            switch (request.Endpoint)
+            {
+                case "query_aggregate_digests":
+                    return new JsonTransportResponse(200, new JObject(_participant.QueryAggregateDigests()));
+                default:
+                    return new JsonTransportResponse(500, null);
+            }
         }
     }
 }

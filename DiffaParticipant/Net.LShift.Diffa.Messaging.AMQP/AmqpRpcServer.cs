@@ -15,6 +15,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -23,6 +24,8 @@ using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using RabbitMQ.Client;
+using RabbitMQ.Client.MessagePatterns.Configuration;
 using RabbitMQ.Client.MessagePatterns.Unicast;
 
 using Net.LShift.Diffa.Messaging.AMQP;
@@ -38,7 +41,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 
         public AmqpRpcServer(IConnector connector, string queueName, IJsonRpcHandler handler)
         {
-            _messaging = CreateMessaging(connector, queueName);
+            _messaging = AmqpRpc.CreateMessaging(connector, queueName);
             _handler = handler;
             _worker = new Thread(WorkerLoop);
         }
@@ -80,7 +83,13 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         {
             try
             {
-                return _messaging.Receive(100);
+                var message = _messaging.Receive(100);
+                if (message == null)
+                {
+                    // TODO handle this more appropriately
+                    throw new AmqpException();
+                }
+                return message;
             }
             catch (EndOfStreamException)
             {
@@ -96,32 +105,19 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         private void Reply(IReceivedMessage message, JsonTransportRequest request, JsonTransportResponse response)
         {
             var reply = message.CreateReply();
-            var headers = new Dictionary<string, object>
-            {
-                {AmqpRpc.EndpointHeader, request.Endpoint},
-                {AmqpRpc.StatusCodeHeader, response.Status}
-            };
+            var headers = AmqpRpc.CreateHeaders(request.Endpoint, response.Status);
             reply.Properties.Headers = headers;
-            reply.Body = Serialize(response.Content);
+            reply.Body = Json.Serialize(response.Content);
             _messaging.Send(reply);
         }
 
         private void ReceiveHandleAckReply()
         {
             var message = Receive();
-            var request = new JsonTransportRequest(EndpointFor(message), Deserialize(message.Body));
+            var request = new JsonTransportRequest(EndpointFor(message), Json.Deserialize(message.Body));
             var response = _handler.HandleRequest(request);
             Ack(message);
             Reply(message, request, response);
-        }
-
-        private static IMessaging CreateMessaging(IConnector connector, string queueName)
-        {
-            var messaging = Factory.CreateMessaging();
-            messaging.Connector = connector;
-            messaging.QueueName = queueName;
-            messaging.SetupReceiver += channel => channel.QueueDeclare(queueName);
-            return messaging;
         }
 
         internal class AmqpException : Exception {}
@@ -148,7 +144,50 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             }
         }
 
-        private static byte[] Serialize(JObject obj)
+        private static String EndpointFor(IReceivedMessage message)
+        {
+            var headers = message.Properties.Headers;
+            var endpointHeader = headers[AmqpRpc.EndpointHeader];
+            return Encoding.UTF8.GetString((byte[]) endpointHeader);
+        }
+
+    }
+
+    public class AmqpRpc
+    {
+        public const String Encoding = "UTF-8";
+        public const String EndpointHeader = "rpc-endpoint";
+        public const String StatusCodeHeader = "rpc-status-code";
+        public const int DefaultStatusCode = 200;
+
+        public static IConnector CreateConnector(String hostName)
+        {
+            var connectionBuilder = new ConnectionBuilder(new ConnectionFactory(), new AmqpTcpEndpoint(hostName));
+            return Factory.CreateConnector(connectionBuilder);
+        }
+
+        public static IMessaging CreateMessaging(IConnector connector, string queueName)
+        {
+            var messaging = Factory.CreateMessaging();
+            messaging.Connector = connector;
+            messaging.QueueName = queueName;
+            messaging.SetupReceiver += channel => channel.QueueDeclare(queueName);
+            return messaging;
+        }
+
+        public static IDictionary CreateHeaders(String endpoint, int status)
+        {
+            return new Dictionary<string, object>
+            {
+                {AmqpRpc.EndpointHeader, endpoint},
+                {AmqpRpc.StatusCodeHeader, status}
+            };
+        }
+    }
+
+    public class Json
+    {
+        public static byte[] Serialize(JObject obj)
         {
             var sw = new StringWriter();
             var writer = new JsonTextWriter(sw);
@@ -156,25 +195,9 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             return Encoding.UTF8.GetBytes(sw.ToString());
         }
 
-        private static JObject Deserialize(byte[] data)
+        public static JObject Deserialize(byte[] data)
         {
             return JObject.Parse(Encoding.UTF8.GetString(data));
         }
-
-        private static String EndpointFor(IReceivedMessage message)
-        {
-            var headers = message.Properties.Headers;
-            var endpointHeader = headers[AmqpRpc.EndpointHeader];
-            return endpointHeader.ToString();
-        }
-
-    }
-
-    internal class AmqpRpc
-    {
-        public const String Encoding = "UTF-8";
-        public const String EndpointHeader = "rpc-endpoint";
-        public const String StatusCodeHeader = "rpc-status-code";
-        public const int DefaultStatusCode = 200;
     }
 }
