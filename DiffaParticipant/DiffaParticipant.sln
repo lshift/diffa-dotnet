@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.LShift.Diffa.Messaging.AMQP", "Net.LShift.Diffa.Messaging.AMQP\Net.LShift.Diffa.Messaging.AMQP.csproj", "{38735842-7EAE-451E-BB34-C1D88ED1E2EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.LShift.Diffa.Messaging.Amqp", "Net.LShift.Diffa.Messaging.AMQP\Net.LShift.Diffa.Messaging.Amqp.csproj", "{38735842-7EAE-451E-BB34-C1D88ED1E2EF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.LShift.Diffa.Participants", "Net.LShift.Diffa.Participants\Net.LShift.Diffa.Participants.csproj", "{D3E42187-4C30-4519-AABC-44AE924F94E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.LShift.Diffa.Messaging.AMQP.Test", "Net.LShift.Diffa.Messaging.AMQP.Test\Net.LShift.Diffa.Messaging.AMQP.Test.csproj", "{D8E2EDD6-F29E-474D-A5A7-A09C619DED65}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.LShift.Diffa.Messaging.Amqp.Test", "Net.LShift.Diffa.Messaging.AMQP.Test\Net.LShift.Diffa.Messaging.Amqp.Test.csproj", "{D8E2EDD6-F29E-474D-A5A7-A09C619DED65}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.LShift.Diffa.Participants.Test", "Net.LShift.Diffa.Participants.Test\Net.LShift.Diffa.Participants.Test.csproj", "{ECFE1B38-99E5-4B2A-85D4-A3637B001CFB}"
 EndProject
