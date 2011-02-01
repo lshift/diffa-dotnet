@@ -42,7 +42,7 @@ namespace Net.LShift.Diffa.Messaging.AMQP.Test
             // Simple smoke test for the worker thread disposal; just starts and then disposes the server.
             // TODO this assumes Rabbit is running on the named endpoint; could boot up a Rabbit instance on localhost instead
             var participant = _mockery.StrictMock<IParticipant>();
-            using (var server = new AmqpRpcServer(AmqpRpc.CreateConnector("mrnoisy.lshift.net"), "DUMMY_QUEUE_NAME",
+            using (var server = new AmqpRpcServer(AmqpRpc.CreateConnector("localhost"), "DUMMY_QUEUE_NAME",
                 new ParticipantHandler(participant)))
             {
                 server.Start();
@@ -53,9 +53,9 @@ namespace Net.LShift.Diffa.Messaging.AMQP.Test
         public void ServerShouldRespondToRpc()
         {
             var participant = _mockery.StrictMock<IParticipant>();
-            using (var client = new JsonAmqpRpcClient(AmqpRpc.CreateConnector("mrnoisy.lshift.net"), "QUEUE_NAME"))
+            using (var client = new JsonAmqpRpcClient(AmqpRpc.CreateConnector("localhost"), "QUEUE_NAME"))
             {
-                using (var server = new AmqpRpcServer(AmqpRpc.CreateConnector("mrnoisy.lshift.net"), "QUEUE_NAME",
+                using (var server = new AmqpRpcServer(AmqpRpc.CreateConnector("localhost"), "QUEUE_NAME",
                     new ParticipantHandler(participant)))
                 {
                     server.Start();
