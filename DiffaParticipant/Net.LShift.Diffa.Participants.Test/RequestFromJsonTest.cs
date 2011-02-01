@@ -14,8 +14,10 @@
 // limitations under the License.
 //
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
-
+using System.Diagnostics;
 using NUnit.Framework;
 
 using Newtonsoft.Json.Linq;
@@ -30,7 +32,12 @@ namespace Net.LShift.Diffa.Participants.Test
         {
             var jsonString = @"{
                 ""constraints"": [
-                    {""attributes"": {}, ""values"": [], ""dataType"": ""bizDate""}
+                {
+                    ""attributes"": {""lower"": ""2011-01-01T00:00:00.000Z"",
+                                    ""upper"": ""2011-12-31T23:59:59.999Z""},
+                    ""values"": null,
+                    ""dataType"": ""bizDate""
+                }
                 ],
                 ""buckets"": {""bizDate"": ""yearly""}
             }";
@@ -38,9 +45,10 @@ namespace Net.LShift.Diffa.Participants.Test
             var request = QueryAggregateDigestsRequest.FromJObject(jObject);
 
             Assert.AreEqual("yearly", request.Buckets["bizDate"]);
-            Assert.AreEqual("bizDate", request.Constraints[0]["dataType"]);
-            Assert.AreEqual(new List<string>(), request.Constraints[0]["values"]);
-            Assert.AreEqual(new Dictionary<string, string>(), request.Constraints[0]["attributes"]);
+            Assert.AreEqual("bizDate", request.Constraints[0].DataType);
+            Assert.AreEqual(null, request.Constraints[0].Values);
+            Assert.AreEqual(new DateTime(2011, 1, 1), DateTime.Parse(request.Constraints[0].Attributes["lower"]));
+            Assert.AreEqual(new DateTime(2011, 12, 31, 23, 59, 59, 999), DateTime.Parse(request.Constraints[0].Attributes["upper"]));
         }
     }
 }
