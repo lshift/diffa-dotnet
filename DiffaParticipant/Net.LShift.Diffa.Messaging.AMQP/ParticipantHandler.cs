@@ -14,11 +14,17 @@
 // limitations under the License.
 //
 
-using Net.LShift.Diffa.Participants;
-using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
-namespace Net.LShift.Diffa.Messaging.AMQP
+using Net.LShift.Diffa.Participants;
+
+namespace Net.LShift.Diffa.Messaging.Amqp
 {
+    public interface IJsonRpcHandler
+    {
+        JsonTransportResponse HandleRequest(JsonTransportRequest request);
+    }
+
     public class ParticipantHandler : IJsonRpcHandler
     {
         private readonly IParticipant _participant;
@@ -33,7 +39,10 @@ namespace Net.LShift.Diffa.Messaging.AMQP
             switch (request.Endpoint)
             {
                 case "query_aggregate_digests":
-                    return new JsonTransportResponse(200, new JObject(_participant.QueryAggregateDigests()));
+                    var requestParams = QueryAggregateDigestsRequest.FromJObject(request.Body);
+                    var response = _participant.QueryAggregateDigests(requestParams);
+                    Debug.Assert(response != null);
+                    return new JsonTransportResponse(200, response.ToJObject());
                 default:
                     return new JsonTransportResponse(500, null);
             }

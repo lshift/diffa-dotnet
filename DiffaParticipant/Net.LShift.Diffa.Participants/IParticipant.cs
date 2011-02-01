@@ -14,14 +14,10 @@
 // limitations under the License.
 //
 
-using System.Collections.Generic;
-
 namespace Net.LShift.Diffa.Participants
 {
     public interface IParticipant
     {
-        List<AggregateDigest> QueryAggregateDigests();
-        List<EntityVersion> QueryEntityVersions();
-        // TODO arguments in method signatures
+        QueryAggregateDigestsResponse QueryAggregateDigests(QueryAggregateDigestsRequest request);
     }
 }

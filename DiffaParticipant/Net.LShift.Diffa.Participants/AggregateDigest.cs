@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace Net.LShift.Diffa.Participants
 {
-    public class AggregateDigest
+    public class AggregateDigest : IDigest
     {
         public AggregateDigest(List<string> attributes, DateTime lastUpdated, string digest)
         {

@@ -8,7 +8,7 @@
     <ProjectGuid>{D8E2EDD6-F29E-474D-A5A7-A09C619DED65}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Net.LShift.Diffa.Messaging.AMQP.Test</RootNamespace>
+    <RootNamespace>Net.LShift.Diffa.Messaging.Amqp.Test</RootNamespace>
     <AssemblyName>Net.LShift.Diffa.Messaging.AMQP.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

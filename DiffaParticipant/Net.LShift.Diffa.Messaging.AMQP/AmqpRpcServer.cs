@@ -28,7 +28,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.MessagePatterns.Configuration;
 using RabbitMQ.Client.MessagePatterns.Unicast;
 
-using Net.LShift.Diffa.Messaging.AMQP;
+using Net.LShift.Diffa.Messaging.Amqp;
 
 namespace Net.LShift.Diffa.Messaging.Amqp
 {
@@ -107,16 +107,16 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             var reply = message.CreateReply();
             var headers = AmqpRpc.CreateHeaders(request.Endpoint, response.Status);
             reply.Properties.Headers = headers;
-            reply.Body = Json.Serialize(response.Content);
+            reply.Body = Json.Serialize(response.Body);
             _messaging.Send(reply);
         }
 
-        private void ReceiveHandleAckReply()
+        private void ReceiveAckHandleReply()
         {
             var message = Receive();
+            Ack(message);
             var request = new JsonTransportRequest(EndpointFor(message), Json.Deserialize(message.Body));
             var response = _handler.HandleRequest(request);
-            Ack(message);
             Reply(message, request, response);
         }
 
@@ -135,7 +135,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
                 }
                 try
                 {
-                    ReceiveHandleAckReply();
+                    ReceiveAckHandleReply();
                 }
                 catch (AmqpException)
                 {
@@ -179,8 +179,8 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         {
             return new Dictionary<string, object>
             {
-                {AmqpRpc.EndpointHeader, endpoint},
-                {AmqpRpc.StatusCodeHeader, status}
+                {EndpointHeader, endpoint},
+                {StatusCodeHeader, status}
             };
         }
     }
@@ -189,15 +189,16 @@ namespace Net.LShift.Diffa.Messaging.Amqp
     {
         public static byte[] Serialize(JObject obj)
         {
-            var sw = new StringWriter();
-            var writer = new JsonTextWriter(sw);
+            var stringWriter = new StringWriter();
+            var writer = new JsonTextWriter(stringWriter);
             obj.WriteTo(writer);
-            return Encoding.UTF8.GetBytes(sw.ToString());
+            return Encoding.UTF8.GetBytes(stringWriter.ToString());
         }
 
         public static JObject Deserialize(byte[] data)
         {
             return JObject.Parse(Encoding.UTF8.GetString(data));
         }
+
     }
 }

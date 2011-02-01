@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D3E42187-4C30-4519-AABC-44AE924F94E6}</ProjectGuid>
+    <ProjectGuid>{ECFE1B38-99E5-4B2A-85D4-A3637B001CFB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Net.LShift.Diffa.Participants</RootNamespace>
-    <AssemblyName>Net.LShift.Diffa.Participants</AssemblyName>
+    <RootNamespace>Net.LShift.Diffa.Participants.Test</RootNamespace>
+    <AssemblyName>Net.LShift.Diffa.Participants.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -34,6 +34,9 @@
     <Reference Include="Newtonsoft.Json, Version=3.5.0.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\AppData\Local\WebGAC\Repository\Newtonsoft.Json\3.5.0.2_Release\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework, Version=2.5.4.10098, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\AppData\Local\WebGAC\Repository\nunit.framework\2.5.4.10098_Release\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,12 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AggregateDigest.cs" />
-    <Compile Include="EntityVersion.cs" />
-    <Compile Include="IDigest.cs" />
-    <Compile Include="IParticipant.cs" />
+    <Compile Include="RequestFromJsonTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryAggregateDigestsRequest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Net.LShift.Diffa.Participants\Net.LShift.Diffa.Participants.csproj">
+      <Project>{D3E42187-4C30-4519-AABC-44AE924F94E6}</Project>
+      <Name>Net.LShift.Diffa.Participants</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

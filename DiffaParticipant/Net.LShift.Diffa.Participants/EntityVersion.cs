@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace Net.LShift.Diffa.Participants
 {
-    public class EntityVersion
+    public class EntityVersion : IDigest
     {
         public EntityVersion(string id, List<String> attributes, DateTime lastUpdated, string digest)
         {

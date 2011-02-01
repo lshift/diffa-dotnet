@@ -15,7 +15,6 @@
 //
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 using NUnit.Framework;
@@ -25,10 +24,9 @@ using Newtonsoft.Json.Linq;
 
 using RabbitMQ.Client.MessagePatterns.Unicast;
 
-using Net.LShift.Diffa.Messaging.Amqp;
 using Net.LShift.Diffa.Participants;
 
-namespace Net.LShift.Diffa.Messaging.AMQP.Test
+namespace Net.LShift.Diffa.Messaging.Amqp.Test
 {
     [TestFixture]
     public class AmqpEndToEndTest
@@ -52,19 +50,26 @@ namespace Net.LShift.Diffa.Messaging.AMQP.Test
         [Test]
         public void ServerShouldRespondToRpc()
         {
-            var participant = _mockery.StrictMock<IParticipant>();
+            var participant = new StubParticipant();
+            
             using (var client = new JsonAmqpRpcClient(AmqpRpc.CreateConnector("localhost"), "QUEUE_NAME"))
             {
                 using (var server = new AmqpRpcServer(AmqpRpc.CreateConnector("localhost"), "QUEUE_NAME",
                     new ParticipantHandler(participant)))
                 {
                     server.Start();
-                    client.Call("query_aggregate_digests", Json.Deserialize(Encoding.UTF8.GetBytes("{foo: 123}")));
+                    client.Call("query_aggregate_digests", Json.Deserialize(Encoding.UTF8.GetBytes(@"{""constraints"": [], ""buckets"": {}}")));
                 }
             }
-            Expect.Call(participant.QueryAggregateDigests()).Return(
-                new List<AggregateDigest> { new AggregateDigest(new List<string> {"ATTRIBUTE"}, new DateTime(), "DIGEST") });
-            _mockery.ReplayAll();
+
+        }
+
+        internal class StubParticipant : IParticipant
+        {
+            public QueryAggregateDigestsResponse QueryAggregateDigests(QueryAggregateDigestsRequest request)
+            {
+                return new QueryAggregateDigestsResponse(200, "DIGEST");
+            }
         }
 
         internal class JsonAmqpRpcClient : IDisposable

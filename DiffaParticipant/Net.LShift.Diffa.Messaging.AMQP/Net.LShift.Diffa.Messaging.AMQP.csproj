@@ -8,7 +8,7 @@
     <ProjectGuid>{38735842-7EAE-451E-BB34-C1D88ED1E2EF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Net.LShift.Diffa.Messaging.AMQP</RootNamespace>
+    <RootNamespace>Net.LShift.Diffa.Messaging.Amqp</RootNamespace>
     <AssemblyName>Net.LShift.Diffa.Messaging.AMQP</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -50,12 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonTransportRequest.cs" />
+    <Compile Include="JsonTransportResponse.cs" />
     <Compile Include="ParticipantHandler.cs" />
     <Compile Include="AmqpRpcServer.cs" />
-    <Compile Include="IJsonRpcHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="JsonTransportResponse.cs" />
-    <Compile Include="JsonTransportRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Net.LShift.Diffa.Participants\Net.LShift.Diffa.Participants.csproj">

@@ -14,10 +14,17 @@
 // limitations under the License.
 //
 
-namespace Net.LShift.Diffa.Messaging.AMQP
+using System;
+using System.Collections.Generic;
+
+namespace Net.LShift.Diffa.Participants
 {
-    public interface IJsonRpcHandler
+    public interface IDigest
     {
-        JsonTransportResponse HandleRequest(JsonTransportRequest request);
+        List<string> Attributes { get; }
+
+        DateTime LastUpdated { get; }
+
+        string Digest { get; }
     }
 }

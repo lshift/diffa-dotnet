@@ -16,18 +16,17 @@
 
 using Newtonsoft.Json.Linq;
 
-namespace Net.LShift.Diffa.Messaging.AMQP
+namespace Net.LShift.Diffa.Messaging.Amqp
 {
     public class JsonTransportResponse
     {
-        public JsonTransportResponse(int status, JObject content)
+        public int Status { get; private set; }
+        public JObject Body { get; private set; }
+
+        public JsonTransportResponse(int status, JObject body)
         {
             Status = status;
-            Content = content;
+            Body = body;
         }
-
-        public int Status { get; private set; }
-
-        public JObject Content { get; private set; }
     }
 }
