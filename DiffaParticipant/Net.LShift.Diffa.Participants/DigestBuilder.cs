@@ -28,7 +28,7 @@ namespace Net.LShift.Diffa.Participants
 
         public DigestBuilder(IDictionary<string, string> functions)
         {
-            _functions = functions.Keys.ToDictionary(key => key, key => NamesToTypes[functions[key]]);
+            _functions = functions.Keys.ToDictionary(key => key, key => CategoryFunctionRegistry[functions[key]]);
         }
 
         public void Add(string id, IDictionary<string, string> attributes, DateTime lastUpdated, string version)
@@ -55,11 +55,14 @@ namespace Net.LShift.Diffa.Participants
             return new List<AggregateDigest>(from key in keys select _digestBuckets[key].ToDigest());
         }
 
-        private static readonly IDictionary<string, ICategoryFunction> NamesToTypes = new Dictionary<string, ICategoryFunction>
+        private static readonly IDictionary<string, ICategoryFunction> CategoryFunctionRegistry = new Dictionary<string, ICategoryFunction>
             {
                 {"1000s", new IntegerCategoryFunction(1000)},
                 {"100s", new IntegerCategoryFunction(100)},
-                {"10s", new IntegerCategoryFunction(10)}
+                {"10s", new IntegerCategoryFunction(10)},
+                {"daily", new DailyCategoryFunction()},
+                {"monthly", new MonthlyCategoryFunction()},
+                {"yearly", new YearlyCategoryFunction()}
             };
     }
 

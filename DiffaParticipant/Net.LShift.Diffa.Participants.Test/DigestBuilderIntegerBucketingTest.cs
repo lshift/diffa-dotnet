@@ -22,7 +22,7 @@ using NUnit.Framework;
 namespace Net.LShift.Diffa.Participants.Test
 {
     [TestFixture]
-    class DigestBuilderTest
+    class DigestBuilderIntegerBucketingTest
     {
         [Test]
         public void ShouldBucketByThousands()
