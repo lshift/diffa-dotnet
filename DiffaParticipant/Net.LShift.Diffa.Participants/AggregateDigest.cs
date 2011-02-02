@@ -35,42 +35,6 @@ namespace Net.LShift.Diffa.Participants
             Digest = digest;
         }
 
-        public bool Equals(AggregateDigest other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Equals(other.Attributes, Attributes) && other.LastUpdated.Equals(LastUpdated) && Equals(other.Digest, Digest);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof (AggregateDigest)) return false;
-            return Equals((AggregateDigest) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int result = (Attributes != null ? Attributes.GetHashCode() : 0);
-                result = (result*397) ^ LastUpdated.GetHashCode();
-                result = (result*397) ^ (Digest != null ? Digest.GetHashCode() : 0);
-                return result;
-            }
-        }
-
-        public static bool operator ==(AggregateDigest left, AggregateDigest right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(AggregateDigest left, AggregateDigest right)
-        {
-            return !Equals(left, right);
-        }
-
         public IList<string> Attributes { get; private set; }
 
         public DateTime LastUpdated { get; private set; }
