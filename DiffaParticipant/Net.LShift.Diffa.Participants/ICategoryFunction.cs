@@ -21,6 +21,13 @@ namespace Net.LShift.Diffa.Participants
     public interface ICategoryFunction
     {
         string Name { get; }
+
+        /// <summary>
+        /// Given a value from the value domain, returns the name of the partition to which it belongs.
+        /// </summary>
+        /// <param name="value">Value from the value domain encoded as a string</param>
+        /// <returns>The name of the partition to which the value belongs</returns>
+        /// <exception cref="InvalidAttributeValueException">value is not valid for this category function</exception>
         string OwningPartition(string value);
     }
 
