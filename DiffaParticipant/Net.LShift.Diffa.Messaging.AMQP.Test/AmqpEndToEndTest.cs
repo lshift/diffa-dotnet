@@ -71,7 +71,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
         {
             public QueryAggregateDigestsResponse QueryAggregateDigests(QueryAggregateDigestsRequest request)
             {
-                return new QueryAggregateDigestsResponse(new List<AggregateDigest>() {
+                return new QueryAggregateDigestsResponse(new List<AggregateDigest> {
                     new AggregateDigest(new List<string> { "2011-01" }, new DateTime(2011, 01, 31, 16, 22, 23, 724),
                     "4dac11f9c09f3ebc8842790cd5dec24a") });
             }

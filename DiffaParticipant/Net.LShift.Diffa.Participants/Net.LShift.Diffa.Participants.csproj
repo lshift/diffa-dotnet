@@ -44,8 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateDigest.cs" />
+    <Compile Include="DigestBuilder.cs" />
     <Compile Include="EntityVersion.cs" />
+    <Compile Include="ICategoryFunction.cs" />
     <Compile Include="IDigest.cs" />
+    <Compile Include="IntegerCategoryFunction.cs" />
     <Compile Include="IParticipant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryAggregateDigestsRequest.cs" />
