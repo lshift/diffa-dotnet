@@ -35,5 +35,12 @@ namespace Net.LShift.Diffa.Participants.Test
             var categoryFunction = new IntegerCategoryFunction(100);
             categoryFunction.OwningPartition("NOT_AN_INTEGER");
         }
+
+        [Test]
+        public void NameShouldBeBasedOnDenominator()
+        {
+            var categoryFunction = new IntegerCategoryFunction(100);
+            Assert.AreEqual("100s", categoryFunction.Name);
+        }
     }
 }

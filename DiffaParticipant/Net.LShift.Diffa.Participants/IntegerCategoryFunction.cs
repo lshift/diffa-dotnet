@@ -29,7 +29,7 @@ namespace Net.LShift.Diffa.Participants
 
         public string Name
         {
-            get { throw new NotImplementedException(); } // TODO
+            get { return _denominator.ToString() + "s"; }
         }
 
         public string OwningPartition(string value)
