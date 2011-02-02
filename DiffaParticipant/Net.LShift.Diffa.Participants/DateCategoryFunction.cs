@@ -25,8 +25,15 @@ namespace Net.LShift.Diffa.Participants
 
         public string OwningPartition(string value)
         {
-            var date = DateTime.Parse(value);
-            return date.ToString(Pattern);
+            try
+            {
+                var date = DateTime.Parse(value);
+                return date.ToString(Pattern);
+            }
+            catch (FormatException)
+            {
+                throw new InvalidAttributeValueException();
+            }
         }
     }
 
