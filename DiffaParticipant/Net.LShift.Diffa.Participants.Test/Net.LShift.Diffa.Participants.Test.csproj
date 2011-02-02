@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CategoryFunctionTest.cs" />
+    <Compile Include="DigestBuilderTest.cs" />
     <Compile Include="JsonConversionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
