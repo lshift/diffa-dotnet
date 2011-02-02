@@ -38,7 +38,7 @@ namespace Net.LShift.Diffa.Participants
 
         public JObject ToJObject()
         {
-            return JObject.Parse(JsonConvert.SerializeObject(new Dictionary<string, object>
+            return JObject.FromObject(new Dictionary<string, object>
                 {
                     {"attributes", Attributes},
                     {"metadata", new Dictionary<string, object>
@@ -46,7 +46,7 @@ namespace Net.LShift.Diffa.Participants
                             {"lastUpdated", LastUpdated.ToUniversalTime().ToString("o")},
                             {"digest", Digest}
                         }}
-                }));
+                });
         }
     }
 
