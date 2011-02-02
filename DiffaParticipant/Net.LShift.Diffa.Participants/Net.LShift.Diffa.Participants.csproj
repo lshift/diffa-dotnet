@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="AggregateDigest.cs" />
     <Compile Include="DigestBuilder.cs" />
+    <Compile Include="DigestUtils.cs" />
     <Compile Include="EntityVersion.cs" />
     <Compile Include="ICategoryFunction.cs" />
     <Compile Include="IDigest.cs" />

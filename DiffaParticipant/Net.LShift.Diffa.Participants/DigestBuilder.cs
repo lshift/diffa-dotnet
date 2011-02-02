@@ -16,9 +16,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Net.LShift.Diffa.Participants
@@ -94,16 +92,18 @@ namespace Net.LShift.Diffa.Participants
         {
             if (_digest == null)
             {
-                using (var md5 = MD5.Create())
-                {
-                    var bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(_builder.ToString()));
-                    _digest = BitConverter.ToString(bytes).Replace("-", "").ToLower();
-                }
+                _digest = DigestUtils.Md5Hex(_builder.ToString());
             }
             var keys = Attributes.Keys.ToArray();
             Array.Sort(keys);
             var attributes = keys.Select(key => Attributes[key]).ToList();
             return new AggregateDigest(attributes, LastUpdated, _digest);
+        }
+
+        public override string ToString()
+        {
+            return "Bucket(Name=" + Name + ", Attributes={" + String.Join(",", Attributes) + "}, LastUpdated="
+                + LastUpdated.ToString("o") + ")";
         }
     }
 }
