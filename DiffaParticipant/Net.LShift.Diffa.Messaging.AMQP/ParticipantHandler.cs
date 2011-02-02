@@ -15,7 +15,6 @@
 //
 
 using System.Diagnostics;
-
 using Net.LShift.Diffa.Participants;
 
 namespace Net.LShift.Diffa.Messaging.Amqp

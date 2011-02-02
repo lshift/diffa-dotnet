@@ -16,13 +16,18 @@
 
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+
 using Newtonsoft.Json.Linq;
 
 namespace Net.LShift.Diffa.Participants
 {
     public class AggregateDigest : IDigest
     {
+        const string AttributesKey = "attributes";
+        const string MetadataKey = "metadata";
+        const string LastUpdatedKey = "lastUpdated";
+        const string DigestKey = "digest";
+
         public AggregateDigest(IList<string> attributes, DateTime lastUpdated, string digest)
         {
             Attributes = attributes;
@@ -40,11 +45,11 @@ namespace Net.LShift.Diffa.Participants
         {
             return JObject.FromObject(new Dictionary<string, object>
                 {
-                    {"attributes", Attributes},
-                    {"metadata", new Dictionary<string, object>
+                    {AttributesKey, Attributes},
+                    {MetadataKey, new Dictionary<string, object>
                         {
-                            {"lastUpdated", LastUpdated.ToUniversalTime().ToString("o")},
-                            {"digest", Digest}
+                            {LastUpdatedKey, LastUpdated.ToUniversalTime().ToString("o")},
+                            {DigestKey, Digest}
                         }}
                 });
         }
