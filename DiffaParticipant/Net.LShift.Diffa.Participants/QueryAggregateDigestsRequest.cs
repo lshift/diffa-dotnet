@@ -33,7 +33,7 @@ namespace Net.LShift.Diffa.Participants
             Buckets = buckets;
         }
 
-        public static QueryAggregateDigestsRequest FromJObject(JObject jObject)
+        public static QueryAggregateDigestsRequest FromJObject(JContainer jObject)
         {
             var request = JsonConvert.DeserializeObject<QueryAggregateDigestsRequest>(jObject.ToString());
             if (request.Constraints == null || request.Buckets == null)
@@ -46,18 +46,21 @@ namespace Net.LShift.Diffa.Participants
 
     public class QueryAggregateDigestsResponse
     {
-        public int Status { get; private set; }
-        public string Digest { get; private set; }
+        public IList<AggregateDigest> Digests { get; private set; }
 
-        public QueryAggregateDigestsResponse(int status, string digest)
+        public QueryAggregateDigestsResponse(IList<AggregateDigest> digests)
         {
-            Status = status;
-            Digest = digest;
+            Digests = digests;
         }
 
-        public JObject ToJObject()
+        public JArray ToJArray()
         {
-            return new JObject(); // TODO
+            var jArray = new JArray();
+            foreach (var digest in Digests)
+            {
+                jArray.Add(digest.ToJObject());
+            }
+            return jArray;
         }
     }
 

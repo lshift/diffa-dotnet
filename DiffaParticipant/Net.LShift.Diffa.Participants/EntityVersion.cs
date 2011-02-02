@@ -16,12 +16,13 @@
 
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace Net.LShift.Diffa.Participants
 {
     public class EntityVersion : IDigest
     {
-        public EntityVersion(string id, List<String> attributes, DateTime lastUpdated, string digest)
+        public EntityVersion(string id, IList<String> attributes, DateTime lastUpdated, string digest)
         {
             ID = id;
             Attributes = attributes;
@@ -31,11 +32,15 @@ namespace Net.LShift.Diffa.Participants
 
         public string ID { get; private set; }
 
-        public List<string> Attributes { get; private set; }
+        public IList<string> Attributes { get; private set; }
 
         public DateTime LastUpdated { get; private set; }
 
         public string Digest { get; private set; }
 
+        public JObject ToJObject()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

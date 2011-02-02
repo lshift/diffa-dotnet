@@ -15,6 +15,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 using NUnit.Framework;
@@ -38,7 +39,6 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
         public void ServerCanStartAndDispose()
         {
             // Simple smoke test for the worker thread disposal; just starts and then disposes the server.
-            // TODO this assumes Rabbit is running on the named endpoint; could boot up a Rabbit instance on localhost instead
             var participant = _mockery.StrictMock<IParticipant>();
             using (var server = new AmqpRpcServer(AmqpRpc.CreateConnector("localhost"), "DUMMY_QUEUE_NAME",
                 new ParticipantHandler(participant)))
@@ -58,7 +58,11 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
                     new ParticipantHandler(participant)))
                 {
                     server.Start();
-                    client.Call("query_aggregate_digests", Json.Deserialize(Encoding.UTF8.GetBytes(@"{""constraints"": [], ""buckets"": {}}")));
+                    var response = client.Call("query_aggregate_digests", JObject.Parse(@"{""constraints"": [], ""buckets"": {}}"));
+                    var expectedResponse = JArray.Parse(@"[{""attributes"": [""2011-01""],
+                                                            ""metadata"": {""lastUpdated"": ""2011-01-31T16:22:23.7240000Z"",
+                                                                           ""digest"": ""4dac11f9c09f3ebc8842790cd5dec24a""}}]");
+                    Assert.AreEqual(expectedResponse.ToString(), response.ToString());
                 }
             }
 
@@ -68,7 +72,9 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
         {
             public QueryAggregateDigestsResponse QueryAggregateDigests(QueryAggregateDigestsRequest request)
             {
-                return new QueryAggregateDigestsResponse(200, "DIGEST");
+                return new QueryAggregateDigestsResponse(new List<AggregateDigest>() {
+                    new AggregateDigest(new List<string> { "2011-01" }, new DateTime(2011, 01, 31, 16, 22, 23, 724),
+                    "4dac11f9c09f3ebc8842790cd5dec24a") });
             }
         }
 
@@ -92,7 +98,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
                 _messaging.Init();
             }
 
-            public JObject Call(String endpoint, JObject body)
+            public JContainer Call(String endpoint, JContainer body)
             {
                 var message = _messaging.CreateMessage();
                 message.To = _target;

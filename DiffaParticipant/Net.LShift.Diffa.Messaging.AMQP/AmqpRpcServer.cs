@@ -28,8 +28,6 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.MessagePatterns.Configuration;
 using RabbitMQ.Client.MessagePatterns.Unicast;
 
-using Net.LShift.Diffa.Messaging.Amqp;
-
 namespace Net.LShift.Diffa.Messaging.Amqp
 {
     public class AmqpRpcServer : IDisposable
@@ -187,17 +185,25 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 
     public class Json
     {
-        public static byte[] Serialize(JObject obj)
+        public static byte[] Serialize(JContainer item)
         {
             var stringWriter = new StringWriter();
             var writer = new JsonTextWriter(stringWriter);
-            obj.WriteTo(writer);
+            item.WriteTo(writer);
             return Encoding.UTF8.GetBytes(stringWriter.ToString());
         }
 
-        public static JObject Deserialize(byte[] data)
+        public static JContainer Deserialize(byte[] data)
         {
-            return JObject.Parse(Encoding.UTF8.GetString(data));
+            var decodedString = Encoding.UTF8.GetString(data);
+            try
+            {
+                return JObject.Parse(decodedString);
+            }
+            catch (Exception)
+            {
+                return JArray.Parse(decodedString);
+            }
         }
 
     }

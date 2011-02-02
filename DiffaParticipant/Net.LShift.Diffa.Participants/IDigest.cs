@@ -16,15 +16,18 @@
 
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace Net.LShift.Diffa.Participants
 {
     public interface IDigest
     {
-        List<string> Attributes { get; }
+        IList<string> Attributes { get; }
 
         DateTime LastUpdated { get; }
 
         string Digest { get; }
+
+        JObject ToJObject();
     }
 }

@@ -14,7 +14,6 @@
 // limitations under the License.
 //
 
-using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 
 namespace Net.LShift.Diffa.Messaging.Amqp
@@ -22,13 +21,12 @@ namespace Net.LShift.Diffa.Messaging.Amqp
     public class JsonTransportRequest
     {
         public string Endpoint { get; private set; }
-        public JObject Body { get; private set; }
+        public JContainer Body { get; private set; }
 
-        public JsonTransportRequest(string endpoint, JObject body)
+        public JsonTransportRequest(string endpoint, JContainer body)
         {
             Endpoint = endpoint;
             Body = body;
-            Debug.Print("endpoint: "+endpoint+", body: "+body);
         }
     }
 }

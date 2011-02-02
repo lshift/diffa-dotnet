@@ -36,13 +36,14 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 
         public JsonTransportResponse HandleRequest(JsonTransportRequest request)
         {
+            // TODO catch exceptions and set appropriate status codes
             switch (request.Endpoint)
             {
                 case "query_aggregate_digests":
                     var requestParams = QueryAggregateDigestsRequest.FromJObject(request.Body);
                     var response = _participant.QueryAggregateDigests(requestParams);
                     Debug.Assert(response != null);
-                    return new JsonTransportResponse(200, response.ToJObject());
+                    return new JsonTransportResponse(200, response.ToJArray());
                 default:
                     return new JsonTransportResponse(500, null);
             }

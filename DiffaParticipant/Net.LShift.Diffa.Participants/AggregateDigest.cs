@@ -16,23 +16,38 @@
 
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Net.LShift.Diffa.Participants
 {
     public class AggregateDigest : IDigest
     {
-        public AggregateDigest(List<string> attributes, DateTime lastUpdated, string digest)
+        public AggregateDigest(IList<string> attributes, DateTime lastUpdated, string digest)
         {
             Attributes = attributes;
             LastUpdated = lastUpdated;
             Digest = digest;
         }
 
-        public List<string> Attributes { get; private set; }
+        public IList<string> Attributes { get; private set; }
 
         public DateTime LastUpdated { get; private set; }
 
         public string Digest { get; private set; }
+
+        public JObject ToJObject()
+        {
+            return JObject.Parse(JsonConvert.SerializeObject(new Dictionary<string, object>
+                {
+                    {"attributes", Attributes},
+                    {"metadata", new Dictionary<string, object>
+                        {
+                            {"lastUpdated", LastUpdated.ToUniversalTime().ToString("o")},
+                            {"digest", Digest}
+                        }}
+                }));
+        }
     }
 
 }
