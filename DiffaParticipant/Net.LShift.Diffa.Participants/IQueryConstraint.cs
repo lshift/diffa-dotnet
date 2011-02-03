@@ -42,6 +42,21 @@ namespace Net.LShift.Diffa.Participants
     }
 
     /// <summary>
+    /// Represents a (not necessarily contiguous) set of values with which to constrain
+    /// </summary>
+    public class SetQueryConstraint : IQueryConstraint
+    {
+        public string DataType { get; private set; }
+        public ISet<string> Values { get; private set; }
+
+        public SetQueryConstraint(string dataType, ISet<string> values)
+        {
+            DataType = dataType;
+            Values = values;
+        }
+    }
+
+    /// <summary>
     /// Represents a range with no bounds
     /// </summary>
     public class UnboundedRangeQueryConstraint : IQueryConstraint
@@ -73,6 +88,10 @@ namespace Net.LShift.Diffa.Participants
         public IQueryConstraint ToQueryConstraint()
         {
             Validate();
+            if (Values != null)
+            {
+                return new SetQueryConstraint(DataType, new HashSet<string>(Values));
+            }
             var lower = Attributes[Lower];
             var upper = Attributes[Upper];
             if (lower != null && upper != null)
