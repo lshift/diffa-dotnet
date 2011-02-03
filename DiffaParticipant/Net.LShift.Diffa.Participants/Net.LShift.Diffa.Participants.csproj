@@ -52,6 +52,7 @@
     <Compile Include="IDigest.cs" />
     <Compile Include="IntegerCategoryFunction.cs" />
     <Compile Include="IParticipant.cs" />
+    <Compile Include="IQueryConstraint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryAggregateDigestsRequest.cs" />
   </ItemGroup>

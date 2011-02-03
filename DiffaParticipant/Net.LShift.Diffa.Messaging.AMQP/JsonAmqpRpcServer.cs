@@ -30,16 +30,16 @@ using RabbitMQ.Client.MessagePatterns.Unicast;
 
 namespace Net.LShift.Diffa.Messaging.Amqp
 {
-    public class AmqpRpcServer : IDisposable
+    public class JsonAmqpRpcServer : IDisposable
     {
         private readonly IMessaging _messaging;
         private readonly IJsonRpcHandler _handler;
         private Thread _worker;
         private bool _disposing;
 
-        public AmqpRpcServer(IConnector connector, string queueName, IJsonRpcHandler handler)
+        public JsonAmqpRpcServer(string hostName, string queueName, IJsonRpcHandler handler)
         {
-            _messaging = AmqpRpc.CreateMessaging(connector, queueName);
+            _messaging = AmqpRpc.CreateMessaging(AmqpRpc.CreateConnector(hostName), queueName);
             _handler = handler;
             _worker = new Thread(WorkerLoop);
         }
@@ -158,13 +158,13 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         public const String StatusCodeHeader = "rpc-status-code";
         public const int DefaultStatusCode = 200;
 
-        public static IConnector CreateConnector(String hostName)
+        internal static IConnector CreateConnector(String hostName)
         {
             var connectionBuilder = new ConnectionBuilder(new ConnectionFactory(), new AmqpTcpEndpoint(hostName));
             return Factory.CreateConnector(connectionBuilder);
         }
 
-        public static IMessaging CreateMessaging(IConnector connector, string queueName)
+        internal static IMessaging CreateMessaging(IConnector connector, string queueName)
         {
             var messaging = Factory.CreateMessaging();
             messaging.Connector = connector;
@@ -173,7 +173,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             return messaging;
         }
 
-        public static IDictionary CreateHeaders(String endpoint, int status)
+        internal static IDictionary CreateHeaders(String endpoint, int status)
         {
             return new Dictionary<string, object>
             {

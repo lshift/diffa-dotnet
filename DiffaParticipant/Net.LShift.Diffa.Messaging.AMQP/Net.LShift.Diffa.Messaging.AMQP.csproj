@@ -50,10 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonAmqpRpcClient.cs" />
     <Compile Include="JsonTransportRequest.cs" />
     <Compile Include="JsonTransportResponse.cs" />
     <Compile Include="ParticipantHandler.cs" />
-    <Compile Include="AmqpRpcServer.cs" />
+    <Compile Include="JsonAmqpRpcServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

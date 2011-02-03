@@ -22,8 +22,6 @@ using Rhino.Mocks;
 
 using Newtonsoft.Json.Linq;
 
-using RabbitMQ.Client.MessagePatterns.Unicast;
-
 using Net.LShift.Diffa.Participants;
 
 namespace Net.LShift.Diffa.Messaging.Amqp.Test
@@ -39,7 +37,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
         {
             // Simple smoke test for the worker thread disposal; just starts and then disposes the server.
             var participant = _mockery.StrictMock<IParticipant>();
-            using (var server = new AmqpRpcServer(AmqpRpc.CreateConnector("localhost"), "DUMMY_QUEUE_NAME",
+            using (var server = new JsonAmqpRpcServer("localhost", "DUMMY_QUEUE_NAME",
                 new ParticipantHandler(participant)))
             {
                 server.Start();
@@ -51,10 +49,9 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
         {
             var participant = new StubParticipant();
             
-            using (var client = new JsonAmqpRpcClient(AmqpRpc.CreateConnector("localhost"), "QUEUE_NAME"))
+            using (var client = new JsonAmqpRpcClient("localhost", "QUEUE_NAME"))
             {
-                using (var server = new AmqpRpcServer(AmqpRpc.CreateConnector("localhost"), "QUEUE_NAME",
-                    new ParticipantHandler(participant)))
+                using (var server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant)))
                 {
                     server.Start();
                     var response = client.Call("query_aggregate_digests", JObject.Parse(@"{""constraints"": [], ""buckets"": {}}"));
@@ -74,52 +71,6 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
                 return new QueryAggregateDigestsResponse(new List<AggregateDigest> {
                     new AggregateDigest(new List<string> { "2011-01" }, new DateTime(2011, 01, 31, 16, 22, 23, 724),
                     "4dac11f9c09f3ebc8842790cd5dec24a") });
-            }
-        }
-
-        internal class JsonAmqpRpcClient : IDisposable
-        {
-            private IMessaging _messaging;
-            private string _replyTo;
-
-            private readonly string _target;
-
-            public JsonAmqpRpcClient(IConnector connector, String target)
-            {
-                _target = target;
-                _messaging = AmqpRpc.CreateMessaging(connector, "QUEUE_NAME");
-                _messaging.SetupReceiver += channel =>
-                {
-                    _replyTo = channel.QueueDeclare();
-                    _messaging.QueueName = _replyTo;
-                };
-                _messaging.QueueName = "DUMMY_QUEUE_NAME";
-                _messaging.Init();
-            }
-
-            public JContainer Call(String endpoint, JContainer body)
-            {
-                var message = _messaging.CreateMessage();
-                message.To = _target;
-                message.ReplyTo = _replyTo;
-                message.Body = Json.Serialize(body);
-                message.Properties.Headers = AmqpRpc.CreateHeaders(endpoint, 200);
-                _messaging.Send(message);
-
-                var reply = _messaging.Receive(2000);
-                // TODO handle null reply (timeout)
-                // TODO handle error codes in headers
-                return Json.Deserialize(reply.Body);
-            }
-
-            public void Dispose()
-            {
-                if (_messaging == null)
-                {
-                    return;
-                }
-                _messaging.Cancel();
-                _messaging = null;
             }
         }
 
