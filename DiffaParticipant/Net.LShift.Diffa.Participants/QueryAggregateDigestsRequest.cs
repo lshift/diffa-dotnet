@@ -24,10 +24,10 @@ namespace Net.LShift.Diffa.Participants
 {
     public class QueryAggregateDigestsRequest
     {
-        public IList<Constraint> Constraints { get; private set; }
+        public IList<WireConstraint> Constraints { get; private set; }
         public IDictionary<string, string> Buckets { get; private set; }
 
-        public QueryAggregateDigestsRequest(IList<Constraint> constraints, IDictionary<string, string> buckets)
+        public QueryAggregateDigestsRequest(IList<WireConstraint> constraints, IDictionary<string, string> buckets)
         {
             Constraints = constraints;
             Buckets = buckets;
@@ -63,20 +63,6 @@ namespace Net.LShift.Diffa.Participants
             return jArray;
         }
     }
-
-    public class Constraint
-    {
-        public string DataType { get; private set; }
-        public IDictionary<string, string> Attributes { get; private set; }
-        public IList<string> Values { get; private set; }
-
-        public Constraint(string dataType, IDictionary<string, string> attributes, IList<string> values)
-        {
-            DataType = dataType;
-            Attributes = attributes;
-            Values = values;
-        }
-    }
-
+    
 }
 
