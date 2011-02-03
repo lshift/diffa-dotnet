@@ -25,21 +25,6 @@ namespace Net.LShift.Diffa.Participants
     }
 
     /// <summary>
-    /// Represents a set of values with which to constrain
-    /// </summary>
-    public class ListQueryConstraint : IQueryConstraint
-    {
-        public string DataType { get; private set; }
-        public IList<string> Values { get; private set; }
-
-        public ListQueryConstraint(string dataType, IList<string> values)
-        {
-            DataType = dataType;
-            Values = values;
-        }
-    }
-
-    /// <summary>
     /// Represents a range of values as a sequence containing upper and lower bounds
     /// </summary>
     public class RangeQueryConstraint : IQueryConstraint
@@ -88,10 +73,6 @@ namespace Net.LShift.Diffa.Participants
         public IQueryConstraint ToQueryConstraint()
         {
             Validate();
-            if (Values != null)
-            {
-                return new ListQueryConstraint(DataType, Values);
-            }
             var lower = Attributes[Lower];
             var upper = Attributes[Upper];
             if (lower != null && upper != null)
