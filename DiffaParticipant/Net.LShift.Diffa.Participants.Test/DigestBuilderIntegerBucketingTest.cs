@@ -32,9 +32,9 @@ namespace Net.LShift.Diffa.Participants.Test
             
             var lastUpdated = DateTime.Parse("2011-02-02T14:23:44.426Z");
 
-            builder.Add("id1", new Dictionary<string, string> { { "someInt", "1234" } }, lastUpdated, "vsn1");
-            builder.Add("id2", new Dictionary<string, string> { { "someInt", "2345" } }, lastUpdated, "vsn2");
-            builder.Add("id3", new Dictionary<string, string> { { "someInt", "1235" } }, lastUpdated, "vsn3" );
+            builder.Add("id1", new Dictionary<string, string> { { "someInt", "1234" } }, "vsn1");
+            builder.Add("id2", new Dictionary<string, string> { { "someInt", "2345" } }, "vsn2");
+            builder.Add("id3", new Dictionary<string, string> { { "someInt", "1235" } }, "vsn3" );
 
             var expected = new List<AggregateDigest>
                 {
@@ -58,9 +58,9 @@ namespace Net.LShift.Diffa.Participants.Test
 
             var lastUpdated = DateTime.Parse("2011-02-02T14:23:44.426Z");
 
-            builder.Add("id1", new Dictionary<string, string> { { "someInt", "123" } }, lastUpdated, "vsn1");
-            builder.Add("id2", new Dictionary<string, string> { { "someInt", "234" } }, lastUpdated, "vsn2");
-            builder.Add("id3", new Dictionary<string, string> { { "someInt", "125" } }, lastUpdated, "vsn3");
+            builder.Add("id1", new Dictionary<string, string> { { "someInt", "123" } }, "vsn1");
+            builder.Add("id2", new Dictionary<string, string> { { "someInt", "234" } }, "vsn2");
+            builder.Add("id3", new Dictionary<string, string> { { "someInt", "125" } }, "vsn3");
 
             var expected = new List<AggregateDigest>
                 {

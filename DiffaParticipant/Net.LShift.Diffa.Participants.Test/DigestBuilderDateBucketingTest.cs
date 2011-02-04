@@ -32,9 +32,9 @@ namespace Net.LShift.Diffa.Participants.Test
 
             var lastUpdated = DateTime.Parse("2011-02-02T14:23:44.426Z");
 
-            builder.Add("id1", new Dictionary<string, string> { { "bizDate", "2010-08-16" } }, lastUpdated, "vsn1");
-            builder.Add("id2", new Dictionary<string, string> { { "bizDate", "2010-08-14" } }, lastUpdated, "vsn2");
-            builder.Add("id3", new Dictionary<string, string> { { "bizDate", "2010-08-16" } }, lastUpdated, "vsn3");
+            builder.Add("id1", new Dictionary<string, string> { { "bizDate", "2010-08-16" } }, "vsn1");
+            builder.Add("id2", new Dictionary<string, string> { { "bizDate", "2010-08-14" } }, "vsn2");
+            builder.Add("id3", new Dictionary<string, string> { { "bizDate", "2010-08-16" } }, "vsn3");
 
             var expected = new List<AggregateDigest>
                 {
@@ -58,9 +58,9 @@ namespace Net.LShift.Diffa.Participants.Test
 
             var lastUpdated = DateTime.Parse("2011-02-02T14:23:44.426Z");
 
-            builder.Add("id1", new Dictionary<string, string> { { "bizDate", "2010-08-16" } }, lastUpdated, "vsn1");
-            builder.Add("id2", new Dictionary<string, string> { { "bizDate", "2010-07-14" } }, lastUpdated, "vsn2");
-            builder.Add("id3", new Dictionary<string, string> { { "bizDate", "2010-08-09" } }, lastUpdated, "vsn3");
+            builder.Add("id1", new Dictionary<string, string> { { "bizDate", "2010-08-16" } }, "vsn1");
+            builder.Add("id2", new Dictionary<string, string> { { "bizDate", "2010-07-14" } }, "vsn2");
+            builder.Add("id3", new Dictionary<string, string> { { "bizDate", "2010-08-09" } }, "vsn3");
 
             var expected = new List<AggregateDigest>
                 {
@@ -84,9 +84,9 @@ namespace Net.LShift.Diffa.Participants.Test
 
             var lastUpdated = DateTime.Parse("2011-02-02T14:23:44.426Z");
 
-            builder.Add("id1", new Dictionary<string, string> { { "bizDate", "2010-08-16" } }, lastUpdated, "vsn1");
-            builder.Add("id2", new Dictionary<string, string> { { "bizDate", "2009-07-14" } }, lastUpdated, "vsn2");
-            builder.Add("id3", new Dictionary<string, string> { { "bizDate", "2010-08-09" } }, lastUpdated, "vsn3");
+            builder.Add("id1", new Dictionary<string, string> { { "bizDate", "2010-08-16" } }, "vsn1");
+            builder.Add("id2", new Dictionary<string, string> { { "bizDate", "2009-07-14" } }, "vsn2");
+            builder.Add("id3", new Dictionary<string, string> { { "bizDate", "2010-08-09" } }, "vsn3");
 
             var expected = new List<AggregateDigest>
                 {

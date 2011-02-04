@@ -31,7 +31,7 @@ namespace Net.LShift.Diffa.Participants
             _functions = functions.Keys.ToDictionary(key => key, key => CategoryFunctionRegistry.GetByName(functions[key]));
         }
 
-        public void Add(string id, IDictionary<string, string> attributes, DateTime lastUpdated, string version)
+        public void Add(string id, IDictionary<string, string> attributes, string version)
         {
             // Find the bucket name for each of attributes
             var partitions = attributes.Keys.ToDictionary(key => key, key => _functions[key].OwningPartition(attributes[key]));
@@ -43,7 +43,7 @@ namespace Net.LShift.Diffa.Participants
 
             if(!_digestBuckets.ContainsKey(label))
             {
-                _digestBuckets[label] = new Bucket(label, partitions, lastUpdated);
+                _digestBuckets[label] = new Bucket(label, partitions);
             }
             _digestBuckets[label].Add(version);
         }
@@ -82,13 +82,11 @@ namespace Net.LShift.Diffa.Participants
 
         public string Name { get; private set; }
         public IDictionary<string, string> Attributes { get; private set; }
-        public DateTime LastUpdated { get; private set; }
 
-        public Bucket(string name, IDictionary<string, string> attributes, DateTime lastUpdated)
+        public Bucket(string name, IDictionary<string, string> attributes)
         {
             Name = name;
             Attributes = attributes;
-            LastUpdated = lastUpdated;
         }
 
         public void Add(string version)
@@ -114,8 +112,7 @@ namespace Net.LShift.Diffa.Participants
 
         public override string ToString()
         {
-            return "Bucket(Name=" + Name + ", Attributes={" + String.Join(",", Attributes) + "}, LastUpdated="
-                + LastUpdated.ToString("o") + ")";
+            return "Bucket(Name=" + Name + ", Attributes={" + String.Join(",", Attributes) + "})";
         }
     }
 }

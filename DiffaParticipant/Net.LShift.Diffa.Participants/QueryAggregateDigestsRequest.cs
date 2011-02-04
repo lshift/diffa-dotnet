@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -32,6 +33,11 @@ namespace Net.LShift.Diffa.Participants
             Constraints = constraints;
             Buckets = buckets;
         }
+
+        public IList<IQueryConstraint> GetQueryConstraints()
+        {
+            return Constraints.Select(constraint => constraint.ToQueryConstraint()).ToList();
+        } 
 
         public static QueryAggregateDigestsRequest FromJObject(JContainer jObject)
         {
