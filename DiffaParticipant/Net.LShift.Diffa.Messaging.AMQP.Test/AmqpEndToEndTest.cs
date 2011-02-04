@@ -14,7 +14,6 @@
 // limitations under the License.
 //
 
-using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -56,8 +55,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
                     server.Start();
                     var response = client.Call("query_aggregate_digests", JObject.Parse(@"{""constraints"": [], ""buckets"": {}}"));
                     var expectedResponse = JArray.Parse(@"[{""attributes"": [""2011-01""],
-                                                            ""metadata"": {""lastUpdated"": ""2011-01-31T16:22:23.7240000Z"",
-                                                                           ""digest"": ""4dac11f9c09f3ebc8842790cd5dec24a""}}]");
+                                                            ""metadata"": {""digest"": ""4dac11f9c09f3ebc8842790cd5dec24a""}}]");
                     Assert.AreEqual(expectedResponse.ToString(), response.ToString());
                 }
             }
@@ -69,8 +67,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
             public QueryAggregateDigestsResponse QueryAggregateDigests(QueryAggregateDigestsRequest request)
             {
                 return new QueryAggregateDigestsResponse(new List<AggregateDigest> {
-                    new AggregateDigest(new List<string> { "2011-01" }, new DateTime(2011, 01, 31, 16, 22, 23, 724),
-                    "4dac11f9c09f3ebc8842790cd5dec24a") });
+                    new AggregateDigest(new List<string> { "2011-01" }, "4dac11f9c09f3ebc8842790cd5dec24a") });
             }
         }
 

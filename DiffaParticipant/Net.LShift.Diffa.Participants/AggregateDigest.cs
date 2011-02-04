@@ -25,19 +25,15 @@ namespace Net.LShift.Diffa.Participants
     {
         const string AttributesKey = "attributes";
         const string MetadataKey = "metadata";
-        const string LastUpdatedKey = "lastUpdated";
         const string DigestKey = "digest";
 
-        public AggregateDigest(IList<string> attributes, DateTime lastUpdated, string digest)
+        public AggregateDigest(IList<string> attributes, string digest)
         {
             Attributes = attributes;
-            LastUpdated = lastUpdated;
             Digest = digest;
         }
 
         public IList<string> Attributes { get; private set; }
-
-        public DateTime LastUpdated { get; private set; }
 
         public string Digest { get; private set; }
 
@@ -48,7 +44,6 @@ namespace Net.LShift.Diffa.Participants
                     {AttributesKey, Attributes},
                     {MetadataKey, new Dictionary<string, object>
                         {
-                            {LastUpdatedKey, LastUpdated.ToUniversalTime().ToString("o")},
                             {DigestKey, Digest}
                         }}
                 });
@@ -56,8 +51,7 @@ namespace Net.LShift.Diffa.Participants
 
         public override string ToString()
         {
-            return "AggregateDigest(Attributes=[" + String.Join(", ", Attributes) + "], LastUpdated="
-                + LastUpdated.ToUniversalTime().ToString("o") + ", Digest=" + Digest + ")";
+            return "AggregateDigest(Attributes=[" + String.Join(", ", Attributes) + "], Digest=" + Digest + ")";
         }
     }
 }

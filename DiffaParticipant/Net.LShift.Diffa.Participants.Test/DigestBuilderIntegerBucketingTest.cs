@@ -38,16 +38,14 @@ namespace Net.LShift.Diffa.Participants.Test
 
             var expected = new List<AggregateDigest>
                 {
-                    new AggregateDigest(new List<string> {"1000"}, lastUpdated, DigestUtils.Md5Hex("vsn1"+"vsn3")),
-                    new AggregateDigest(new List<string> {"2000"}, lastUpdated, DigestUtils.Md5Hex("vsn2"))
+                    new AggregateDigest(new List<string> {"1000"}, DigestUtils.Md5Hex("vsn1"+"vsn3")),
+                    new AggregateDigest(new List<string> {"2000"}, DigestUtils.Md5Hex("vsn2"))
                 };
             var aggregateDigests = builder.GetDigests();
 
             // TODO fudged because Assert.AreEqual did not seem to work as expected on the actual AggregateDigest objects
-            Assert.AreEqual(expected[0].LastUpdated, aggregateDigests[0].LastUpdated);
             Assert.AreEqual(expected[0].Attributes, aggregateDigests[0].Attributes);
             Assert.AreEqual(expected[0].Digest, aggregateDigests[0].Digest);
-            Assert.AreEqual(expected[1].LastUpdated, aggregateDigests[1].LastUpdated);
             Assert.AreEqual(expected[1].Attributes, aggregateDigests[1].Attributes);
             Assert.AreEqual(expected[1].Digest, aggregateDigests[1].Digest);
         }
@@ -66,16 +64,14 @@ namespace Net.LShift.Diffa.Participants.Test
 
             var expected = new List<AggregateDigest>
                 {
-                    new AggregateDigest(new List<string> {"100"}, lastUpdated, DigestUtils.Md5Hex("vsn1"+"vsn3")),
-                    new AggregateDigest(new List<string> {"200"}, lastUpdated, DigestUtils.Md5Hex("vsn2"))
+                    new AggregateDigest(new List<string> {"100"}, DigestUtils.Md5Hex("vsn1"+"vsn3")),
+                    new AggregateDigest(new List<string> {"200"}, DigestUtils.Md5Hex("vsn2"))
                 };
             var aggregateDigests = builder.GetDigests();
 
             // TODO fudged because Assert.AreEqual did not seem to work as expected on the actual AggregateDigest objects
-            Assert.AreEqual(expected[0].LastUpdated, aggregateDigests[0].LastUpdated);
             Assert.AreEqual(expected[0].Attributes, aggregateDigests[0].Attributes);
             Assert.AreEqual(expected[0].Digest, aggregateDigests[0].Digest);
-            Assert.AreEqual(expected[1].LastUpdated, aggregateDigests[1].LastUpdated);
             Assert.AreEqual(expected[1].Attributes, aggregateDigests[1].Attributes);
             Assert.AreEqual(expected[1].Digest, aggregateDigests[1].Digest);
         }

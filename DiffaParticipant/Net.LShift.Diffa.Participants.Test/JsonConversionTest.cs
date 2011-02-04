@@ -57,14 +57,12 @@ namespace Net.LShift.Diffa.Participants.Test
             var jsonString =
                 @"[{
                 ""attributes"": [""2011-01""],
-                ""metadata"": {""lastUpdated"": ""2011-01-31T16:22:23.7240000Z"",
-                               ""digest"": ""4dac11f9c09f3ebc8842790cd5dec24a""}
+                ""metadata"": {""digest"": ""4dac11f9c09f3ebc8842790cd5dec24a""}
               }]";
             var expected = JArray.Parse(jsonString);
             var queryAggregateDigestsResponse = new QueryAggregateDigestsResponse(
                 new List<AggregateDigest>() {
-                    new AggregateDigest(new List<string> {"2011-01"}, new DateTime(2011, 01, 31, 16, 22, 23, 724),
-                        "4dac11f9c09f3ebc8842790cd5dec24a")});
+                    new AggregateDigest(new List<string> {"2011-01"}, "4dac11f9c09f3ebc8842790cd5dec24a")});
 
             Assert.AreEqual(expected.ToString(), queryAggregateDigestsResponse.ToJArray().ToString());
         }

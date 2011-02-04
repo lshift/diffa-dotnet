@@ -38,16 +38,14 @@ namespace Net.LShift.Diffa.Participants.Test
 
             var expected = new List<AggregateDigest>
                 {
-                    new AggregateDigest(new List<string> {"2010-08-14"}, lastUpdated, DigestUtils.Md5Hex("vsn2")),
-                    new AggregateDigest(new List<string> {"2010-08-16"}, lastUpdated, DigestUtils.Md5Hex("vsn1"+"vsn3"))
+                    new AggregateDigest(new List<string> {"2010-08-14"}, DigestUtils.Md5Hex("vsn2")),
+                    new AggregateDigest(new List<string> {"2010-08-16"}, DigestUtils.Md5Hex("vsn1"+"vsn3"))
                 };
             var aggregateDigests = builder.GetDigests();
 
             // TODO fudged because Assert.AreEqual did not seem to work as expected on the actual AggregateDigest objects
-            Assert.AreEqual(expected[0].LastUpdated, aggregateDigests[0].LastUpdated);
             Assert.AreEqual(expected[0].Attributes, aggregateDigests[0].Attributes);
             Assert.AreEqual(expected[0].Digest, aggregateDigests[0].Digest);
-            Assert.AreEqual(expected[1].LastUpdated, aggregateDigests[1].LastUpdated);
             Assert.AreEqual(expected[1].Attributes, aggregateDigests[1].Attributes);
             Assert.AreEqual(expected[1].Digest, aggregateDigests[1].Digest);
         }
@@ -66,16 +64,14 @@ namespace Net.LShift.Diffa.Participants.Test
 
             var expected = new List<AggregateDigest>
                 {
-                    new AggregateDigest(new List<string> {"2010-07"}, lastUpdated, DigestUtils.Md5Hex("vsn2")),
-                    new AggregateDigest(new List<string> {"2010-08"}, lastUpdated, DigestUtils.Md5Hex("vsn1"+"vsn3"))
+                    new AggregateDigest(new List<string> {"2010-07"}, DigestUtils.Md5Hex("vsn2")),
+                    new AggregateDigest(new List<string> {"2010-08"}, DigestUtils.Md5Hex("vsn1"+"vsn3"))
                 };
             var aggregateDigests = builder.GetDigests();
 
             // TODO fudged because Assert.AreEqual did not seem to work as expected on the actual AggregateDigest objects
-            Assert.AreEqual(expected[0].LastUpdated, aggregateDigests[0].LastUpdated);
             Assert.AreEqual(expected[0].Attributes, aggregateDigests[0].Attributes);
             Assert.AreEqual(expected[0].Digest, aggregateDigests[0].Digest);
-            Assert.AreEqual(expected[1].LastUpdated, aggregateDigests[1].LastUpdated);
             Assert.AreEqual(expected[1].Attributes, aggregateDigests[1].Attributes);
             Assert.AreEqual(expected[1].Digest, aggregateDigests[1].Digest);
         }
@@ -94,16 +90,14 @@ namespace Net.LShift.Diffa.Participants.Test
 
             var expected = new List<AggregateDigest>
                 {
-                    new AggregateDigest(new List<string> {"2009"}, lastUpdated, DigestUtils.Md5Hex("vsn2")),
-                    new AggregateDigest(new List<string> {"2010"}, lastUpdated, DigestUtils.Md5Hex("vsn1"+"vsn3"))
+                    new AggregateDigest(new List<string> {"2009"}, DigestUtils.Md5Hex("vsn2")),
+                    new AggregateDigest(new List<string> {"2010"}, DigestUtils.Md5Hex("vsn1"+"vsn3"))
                 };
             var aggregateDigests = builder.GetDigests();
 
             // TODO fudged because Assert.AreEqual did not seem to work as expected on the actual AggregateDigest objects
-            Assert.AreEqual(expected[0].LastUpdated, aggregateDigests[0].LastUpdated);
             Assert.AreEqual(expected[0].Attributes, aggregateDigests[0].Attributes);
             Assert.AreEqual(expected[0].Digest, aggregateDigests[0].Digest);
-            Assert.AreEqual(expected[1].LastUpdated, aggregateDigests[1].LastUpdated);
             Assert.AreEqual(expected[1].Attributes, aggregateDigests[1].Attributes);
             Assert.AreEqual(expected[1].Digest, aggregateDigests[1].Digest);
         }

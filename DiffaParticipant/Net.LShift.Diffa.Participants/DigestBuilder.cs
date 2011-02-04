@@ -109,7 +109,7 @@ namespace Net.LShift.Diffa.Participants
             var keys = Attributes.Keys.ToArray();
             Array.Sort(keys);
             var attributes = keys.Select(key => Attributes[key]).ToList();
-            return new AggregateDigest(attributes, LastUpdated, _digest);
+            return new AggregateDigest(attributes, _digest);
         }
 
         public override string ToString()
