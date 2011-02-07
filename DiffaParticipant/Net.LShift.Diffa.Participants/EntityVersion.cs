@@ -41,7 +41,16 @@ namespace Net.LShift.Diffa.Participants
 
         public JObject ToJObject()
         {
-            throw new NotImplementedException();
+            return JObject.FromObject(new Dictionary<string, object>
+                {
+                    {"attributes", Attributes},
+                    {"metadata", new Dictionary<string, object>
+                        {
+                            {"digest", Digest},
+                            {"id", ID},
+                            {"lastUpdated", LastUpdated.ToUniversalTime().ToString("o")}
+                        }}
+                });
         }
     }
 }

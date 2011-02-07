@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -68,6 +69,11 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
             {
                 return new QueryAggregateDigestsResponse(new List<AggregateDigest> {
                     new AggregateDigest(new List<string> { "2011-01" }, "4dac11f9c09f3ebc8842790cd5dec24a") });
+            }
+
+            public QueryEntityVersionsResponse QueryEntityVersions(QueryEntityVersionsRequest request)
+            {
+                throw new NotImplementedException();
             }
         }
 

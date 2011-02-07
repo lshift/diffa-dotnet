@@ -19,5 +19,6 @@ namespace Net.LShift.Diffa.Participants
     public interface IParticipant
     {
         QueryAggregateDigestsResponse QueryAggregateDigests(QueryAggregateDigestsRequest request);
+        QueryEntityVersionsResponse QueryEntityVersions(QueryEntityVersionsRequest request);
     }
 }

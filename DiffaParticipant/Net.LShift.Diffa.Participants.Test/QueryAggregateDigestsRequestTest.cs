@@ -24,7 +24,7 @@ using Newtonsoft.Json.Linq;
 namespace Net.LShift.Diffa.Participants.Test
 {
     [TestFixture]
-    public class JsonConversionTest
+    public class QueryAggregateDigestsRequestTest
     {
         [Test]
         public void ShouldCreateRequestFromJObject()

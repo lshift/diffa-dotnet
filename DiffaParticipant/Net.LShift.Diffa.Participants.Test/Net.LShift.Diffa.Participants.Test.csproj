@@ -50,8 +50,9 @@
     <Compile Include="IntegerCategoryFunctionTest.cs" />
     <Compile Include="DigestBuilderDateBucketingTest.cs" />
     <Compile Include="DigestBuilderIntegerBucketingTest.cs" />
-    <Compile Include="JsonConversionTest.cs" />
+    <Compile Include="QueryAggregateDigestsRequestTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryEntityVersionsRequestTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Net.LShift.Diffa.Participants\Net.LShift.Diffa.Participants.csproj">
