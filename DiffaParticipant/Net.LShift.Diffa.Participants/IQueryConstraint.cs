@@ -39,6 +39,11 @@ namespace Net.LShift.Diffa.Participants
             LowerBound = lowerBound;
             UpperBound = upperBound;
         }
+
+        public override string ToString()
+        {
+            return "RangeQueryConstraint(DataType="+DataType+", LowerBound="+LowerBound+", UpperBound="+UpperBound+")";
+        }
     }
 
     /// <summary>
@@ -53,6 +58,12 @@ namespace Net.LShift.Diffa.Participants
         {
             DataType = dataType;
             Values = values;
+        }
+
+        public override string ToString()
+        {
+            return "SetQueryConstraint(DataType=" + DataType + ", Values=[" +
+                   String.Join(", ", new List<string>(Values)) + "])";
         }
     }
 
