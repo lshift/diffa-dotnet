@@ -18,7 +18,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Net.LShift.Diffa.Participants
+namespace Net.LShift.Diffa.Participants.Utils
 {
     public class DigestUtils
     {

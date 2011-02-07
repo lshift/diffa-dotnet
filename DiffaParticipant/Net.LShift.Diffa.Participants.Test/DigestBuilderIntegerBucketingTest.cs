@@ -16,7 +16,7 @@
 
 using System;
 using System.Collections.Generic;
-
+using Net.LShift.Diffa.Participants.Utils;
 using NUnit.Framework;
 
 namespace Net.LShift.Diffa.Participants.Test

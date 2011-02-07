@@ -33,6 +33,11 @@ namespace Net.LShift.Diffa.Participants
             var constraints = jArray.Children().Select(child => JsonConvert.DeserializeObject<WireConstraint>(child.ToString())).ToList();
             return new QueryEntityVersionsRequest {Constraints = constraints};
         }
+
+        public IList<IQueryConstraint> GetQueryConstraints()
+        {
+            return Constraints.Select(constraint => constraint.ToQueryConstraint()).ToList();
+        } 
     }
 
     public class QueryEntityVersionsResponse
