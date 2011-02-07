@@ -37,7 +37,9 @@ namespace Net.LShift.Diffa.Participants
             var partitions = new Dictionary<string, string>();
             foreach (var kv in attributes.Where(kv => _functions.ContainsKey(kv.Key)))
             {
-                partitions[kv.Key] = _functions[kv.Key].OwningPartition(attributes[kv.Key]);
+                var attributeValue = attributes[kv.Key];
+                var categoryFunction = _functions[kv.Key];
+                partitions[kv.Key] = categoryFunction.OwningPartition(attributeValue);
             }
 
             // Join names together to form label
@@ -47,7 +49,8 @@ namespace Net.LShift.Diffa.Participants
 
             if(!_digestBuckets.ContainsKey(label))
             {
-                _digestBuckets[label] = new Bucket(label, partitions);
+                var bucket = new Bucket(label, partitions);
+                _digestBuckets[label] = bucket;
             }
             _digestBuckets[label].Add(version);
         }
