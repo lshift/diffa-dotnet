@@ -34,7 +34,11 @@ namespace Net.LShift.Diffa.Participants
         public void Add(string id, IDictionary<string, string> attributes, string version)
         {
             // Find the bucket name for each of attributes
-            var partitions = attributes.Keys.ToDictionary(key => key, key => _functions[key].OwningPartition(attributes[key]));
+            var partitions = new Dictionary<string, string>();
+            foreach (var kv in attributes.Where(kv => _functions.ContainsKey(kv.Key)))
+            {
+                partitions[kv.Key] = _functions[kv.Key].OwningPartition(attributes[kv.Key]);
+            }
 
             // Join names together to form label
             var keys = partitions.Keys.ToArray();
