@@ -74,13 +74,13 @@ namespace Net.LShift.Diffa.Participants
     /// </summary>
     public class WireConstraint
     {
-        public string DataType { get; private set; }
+        public string Category { get; private set; }
         public IDictionary<string, string> Attributes { get; private set; }
         public IList<string> Values { get; private set; }
 
-        public WireConstraint(string dataType, IDictionary<string, string> attributes, IList<string> values)
+        public WireConstraint(string category, IDictionary<string, string> attributes, IList<string> values)
         {
-            DataType = dataType;
+            Category = category;
             Attributes = attributes;
             Values = values;
         }
@@ -90,21 +90,21 @@ namespace Net.LShift.Diffa.Participants
             Validate();
             if (Values != null)
             {
-                return new SetQueryConstraint(DataType, new HashSet<string>(Values));
+                return new SetQueryConstraint(Category, new HashSet<string>(Values));
             }
             var lower = Attributes[Lower];
             var upper = Attributes[Upper];
             if (lower != null && upper != null)
             {
-                return new RangeQueryConstraint(DataType, lower, upper);
+                return new RangeQueryConstraint(Category, lower, upper);
             }
-            return new UnboundedRangeQueryConstraint(DataType);
+            return new UnboundedRangeQueryConstraint(Category);
         }
 
         private void Validate()
         {
             // TODO provide messages
-            if (DataType == null || Attributes == null)
+            if (Category == null || Attributes == null)
             {
                 throw new InvalidWireConstraint();
             }
