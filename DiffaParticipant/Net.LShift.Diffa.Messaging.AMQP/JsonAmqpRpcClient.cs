@@ -32,10 +32,12 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 
         private readonly string _target;
 
-        public JsonAmqpRpcClient(string hostName, String target)
+        public JsonAmqpRpcClient(string hostName, string target)
         {
             _target = target;
-            _messaging = AmqpRpc.CreateMessaging(AmqpRpc.CreateConnector(hostName), "QUEUE_NAME");
+            var connector = AmqpRpc.CreateConnector(hostName);
+            _messaging = Factory.CreateMessaging();
+            _messaging.Connector = connector;
             _messaging.SetupReceiver += channel =>
             {
                 _replyTo = channel.QueueDeclare();
@@ -45,7 +47,12 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             _messaging.Init();
         }
 
-        public JContainer Call(String endpoint, JContainer body)
+        public JContainer Call(string endpoint, JContainer body)
+        {
+            return Call(endpoint, body, 60000);
+        }
+
+        public JContainer Call(string endpoint, JContainer body, int receiveTimeout)
         {
             var message = _messaging.CreateMessage();
             message.To = _target;
@@ -54,7 +61,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             message.Properties.Headers = AmqpRpc.CreateHeaders(endpoint, 200);
             _messaging.Send(message);
 
-            var reply = _messaging.Receive(2000);
+            var reply = _messaging.Receive(receiveTimeout);
             // TODO handle null reply (timeout)
             // TODO handle error codes in headers
             return Json.Deserialize(reply.Body);
@@ -62,12 +69,8 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 
         public void Dispose()
         {
-            if (_messaging == null)
-            {
-                return;
-            }
             _messaging.Cancel();
-            _messaging = null;
+            _messaging.Dispose();
         }
     }
 }
