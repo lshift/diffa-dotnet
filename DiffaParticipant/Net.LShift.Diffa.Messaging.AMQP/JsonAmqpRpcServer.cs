@@ -106,6 +106,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             var headers = AmqpRpc.CreateHeaders(request.Endpoint, response.Status);
             reply.Properties.Headers = headers;
             reply.Body = Json.Serialize(response.Body);
+            reply.From = null;
             _messaging.Send(reply);
         }
 
