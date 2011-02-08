@@ -15,7 +15,7 @@
 //
 
 using System;
-
+using System.Text;
 using Newtonsoft.Json.Linq;
 
 using RabbitMQ.Client.MessagePatterns.Unicast;
@@ -58,12 +58,16 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             message.To = _target;
             message.ReplyTo = _replyTo;
             message.Body = Json.Serialize(body);
-            message.Properties.Headers = AmqpRpc.CreateHeaders(endpoint, 200);
+            message.Properties.Headers = AmqpRpc.CreateHeaders(endpoint, null);
             _messaging.Send(message);
 
             var reply = _messaging.Receive(receiveTimeout);
+            if (AmqpRpc.GetStatusCode(reply) != 200)
+            {
+                throw new AmqpRpcError(Encoding.UTF8.GetString(reply.Body));
+            }
             // TODO handle null reply (timeout)
-            // TODO handle error codes in headers
+
             return Json.Deserialize(reply.Body);
         }
 
@@ -71,6 +75,15 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         {
             _messaging.Cancel();
             _messaging.Dispose();
+        }
+    }
+
+
+    public class AmqpRpcError : Exception
+    {
+        public AmqpRpcError(string message)
+            : base(message)
+        {
         }
     }
 }

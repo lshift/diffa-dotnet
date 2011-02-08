@@ -14,8 +14,10 @@
 // limitations under the License.
 //
 
+using System;
 using System.Diagnostics;
 using Net.LShift.Diffa.Participants;
+using Newtonsoft.Json.Linq;
 
 namespace Net.LShift.Diffa.Messaging.Amqp
 {
@@ -35,17 +37,31 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 
         public JsonTransportResponse HandleRequest(JsonTransportRequest request)
         {
-            // TODO catch exceptions and set appropriate status codes
             switch (request.Endpoint)
             {
                 case "query_aggregate_digests":
-                    var requestParams = QueryAggregateDigestsRequest.FromJObject(request.Body);
-                    var response = _participant.QueryAggregateDigests(requestParams);
-                    Debug.Assert(response != null);
-                    return new JsonTransportResponse(200, response.ToJArray());
+                    return HandleQueryAggregateDigestsRequest(request);
+                case "query_entity_versions":
+                    return HandleQueryEntityVersionsRequest(request);
                 default:
-                    return new JsonTransportResponse(500, null);
+                    return new JsonTransportResponse(404, JArray.Parse(@"[{""error"": ""Endpoint not implemented""}]"));
             }
+        }
+
+        private JsonTransportResponse HandleQueryAggregateDigestsRequest(JsonTransportRequest request)
+        {
+            var requestParams = QueryAggregateDigestsRequest.FromJObject(request.Body);
+            var response = _participant.QueryAggregateDigests(requestParams);
+            Debug.Assert(response != null);
+            return new JsonTransportResponse(200, response.ToJArray());
+        }
+
+        private JsonTransportResponse HandleQueryEntityVersionsRequest(JsonTransportRequest request)
+        {
+            var requestParams = QueryEntityVersionsRequest.FromJArray((JArray) request.Body);
+            var response = _participant.QueryEntityVersions(requestParams);
+            Debug.Assert(response != null);
+            return new JsonTransportResponse(200, response.ToJArray());
         }
     }
 }

@@ -33,18 +33,15 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 {
     public class JsonAmqpRpcServer : IDisposable
     {
-        private IMessaging _messaging;
+        private readonly IMessaging _messaging;
         private readonly IJsonRpcHandler _handler;
         private Thread _worker;
         private bool _disposing;
-
-        private readonly EventLog _log;
 
         public JsonAmqpRpcServer(string hostName, string queueName, IJsonRpcHandler handler)
         {
             _messaging = AmqpRpc.CreateMessaging(AmqpRpc.CreateConnector(hostName), queueName);
             _handler = handler;
-            _log = CreateEventLog();
         }
 
         /// <summary>
@@ -126,11 +123,22 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             var message = Receive();
             Ack(message);
             var request = new JsonTransportRequest(EndpointFor(message), Json.Deserialize(message.Body));
-            var response = _handler.HandleRequest(request);
-            Reply(message, request, response);
+            try
+            {
+                var response = _handler.HandleRequest(request);
+                Reply(message, request, response);
+            }
+            catch (Exception e)
+            {
+                var response = new JsonTransportResponse(500, JArray.Parse(@"[{""error"": """+e.Message+@"""}]"));
+                Reply(message, request, response);
+                throw;
+            }
         }
 
-        internal class AmqpException : Exception {}
+        internal class AmqpException : Exception
+        {
+        }
 
         private void WorkerLoop()
         {
@@ -173,7 +181,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 
     }
 
-    public class AmqpRpc
+    internal class AmqpRpc
     {
         public const String Encoding = "UTF-8";
         public const String EndpointHeader = "rpc-endpoint";
@@ -195,13 +203,23 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             return messaging;
         }
 
-        internal static IDictionary CreateHeaders(String endpoint, int status)
+        internal static IDictionary CreateHeaders(String endpoint, int? status)
         {
             return new Dictionary<string, object>
             {
                 {EndpointHeader, endpoint},
                 {StatusCodeHeader, status}
             };
+        }
+
+        internal static int? GetStatusCode(IMessage message)
+        {
+            var replyHeaders = message.Properties.Headers;
+            if (! replyHeaders.Contains(StatusCodeHeader))
+            {
+                return null;
+            }
+            return (int) replyHeaders[StatusCodeHeader];
         }
     }
 
