@@ -17,6 +17,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -32,16 +33,18 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 {
     public class JsonAmqpRpcServer : IDisposable
     {
-        private readonly IMessaging _messaging;
+        private IMessaging _messaging;
         private readonly IJsonRpcHandler _handler;
         private Thread _worker;
         private bool _disposing;
+
+        private readonly EventLog _log;
 
         public JsonAmqpRpcServer(string hostName, string queueName, IJsonRpcHandler handler)
         {
             _messaging = AmqpRpc.CreateMessaging(AmqpRpc.CreateConnector(hostName), queueName);
             _handler = handler;
-            _worker = new Thread(WorkerLoop);
+            _log = CreateEventLog();
         }
 
         /// <summary>
@@ -49,7 +52,15 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         /// </summary>
         public void Start()
         {
+            lock (this)
+            {
+                if (_worker != null)
+                {
+                    throw new InvalidOperationException("Server is already running");
+                }
+            }
             _messaging.Init();
+            _worker = new Thread(WorkerLoop);
             _worker.Start();
         }
 
@@ -148,6 +159,16 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             var headers = message.Properties.Headers;
             var endpointHeader = headers[AmqpRpc.EndpointHeader];
             return Encoding.UTF8.GetString((byte[]) endpointHeader);
+        }
+
+        private static EventLog CreateEventLog()
+        {
+            var eventLogSource = typeof(JsonAmqpRpcServer).ToString();
+            if (!EventLog.SourceExists(eventLogSource))
+            {
+                EventLog.CreateEventSource(eventLogSource, "Application");
+            }
+            return new EventLog { Source = eventLogSource };
         }
 
     }

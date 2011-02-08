@@ -27,7 +27,7 @@ using Net.LShift.Diffa.Participants;
 namespace Net.LShift.Diffa.Messaging.Amqp.Test
 {
     [TestFixture]
-    public class AmqpEndToEndTest
+    public class JsonAmqpRpcServerTest
     {
 
         private readonly MockRepository _mockery = new MockRepository();
@@ -45,7 +45,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
         }
 
         [Test]
-        public void ServerShouldRespondToRpc()
+        public void ServerShouldRespondToQueryAggregateDigests()
         {
             var participant = new StubParticipant();
             
@@ -61,6 +61,18 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
                 }
             }
 
+        }
+
+        [Test]
+        [ExpectedException(typeof (InvalidOperationException))]
+        public void ShouldThrowInvalidOperationExceptionIfStartCalledMultipleTimes()
+        {
+            var participant = new StubParticipant();
+            using (var server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant)))
+            {
+                server.Start();
+                server.Start();
+            }
         }
 
         internal class StubParticipant : IParticipant
