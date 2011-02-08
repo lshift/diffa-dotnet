@@ -60,7 +60,34 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
                     Assert.AreEqual(expectedResponse.ToString(), response.ToString());
                 }
             }
+        }
 
+        [Test]
+        public void ServerShouldRespondToQueryEntityVersions()
+        {
+            var participant = new StubParticipant();
+
+            using (var client = new JsonAmqpRpcClient("localhost", "QUEUE_NAME"))
+            {
+                using (var server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant)))
+                {
+                    server.Start();
+                    var json = @"[
+	                    {
+		                    ""attributes"": {""lower"": ""2011-01-01T00:00:00.000Z"",
+									         ""upper"": ""2011-12-31T23:59:59.999Z""},
+		                    ""values"": null,
+		                    ""category"": ""bizDate""
+                        }
+                    ]";
+                    var response = client.Call("query_entity_versions", JArray.Parse(json), 5000);
+                    var expectedResponse = JArray.Parse(@"[{
+                        ""attributes"": [""abc"", ""def""],
+                        ""metadata"": {""digest"": ""vsn1"", ""id"": ""id1"", ""lastUpdated"": ""0001-01-01T00:00:00.0000000Z""}
+                    }]");
+                    Assert.AreEqual(expectedResponse.ToString(), response.ToString());
+                }
+            }
         }
 
         [Test]
@@ -85,7 +112,10 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
 
             public QueryEntityVersionsResponse QueryEntityVersions(QueryEntityVersionsRequest request)
             {
-                throw new NotImplementedException();
+                return new QueryEntityVersionsResponse(new List<EntityVersion>
+                    {
+                          new EntityVersion("id1", new List<string> {"abc", "def"}, new DateTime(), "vsn1")                                     
+                    });
             }
         }
 
