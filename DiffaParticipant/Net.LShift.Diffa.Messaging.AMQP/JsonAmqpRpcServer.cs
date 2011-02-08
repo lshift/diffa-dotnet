@@ -15,8 +15,6 @@
 //
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -25,12 +23,13 @@ using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using RabbitMQ.Client;
-using RabbitMQ.Client.MessagePatterns.Configuration;
 using RabbitMQ.Client.MessagePatterns.Unicast;
 
 namespace Net.LShift.Diffa.Messaging.Amqp
 {
+    /// <summary>
+    /// AMQP RPC server which listens to an exclusive queue and responds to JSON-encoded requests
+    /// </summary>
     public class JsonAmqpRpcServer : IDisposable
     {
         private readonly IMessaging _messaging;
@@ -181,48 +180,9 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 
     }
 
-    internal class AmqpRpc
-    {
-        public const String Encoding = "UTF-8";
-        public const String EndpointHeader = "rpc-endpoint";
-        public const String StatusCodeHeader = "rpc-status-code";
-        public const int DefaultStatusCode = 200;
-
-        internal static IConnector CreateConnector(String hostName)
-        {
-            var connectionBuilder = new ConnectionBuilder(new ConnectionFactory(), new AmqpTcpEndpoint(hostName));
-            return Factory.CreateConnector(connectionBuilder);
-        }
-
-        internal static IMessaging CreateMessaging(IConnector connector, string queueName)
-        {
-            var messaging = Factory.CreateMessaging();
-            messaging.Connector = connector;
-            messaging.QueueName = queueName;
-            messaging.SetupReceiver += channel => channel.QueueDeclare(queueName);
-            return messaging;
-        }
-
-        internal static IDictionary CreateHeaders(String endpoint, int? status)
-        {
-            return new Dictionary<string, object>
-            {
-                {EndpointHeader, endpoint},
-                {StatusCodeHeader, status}
-            };
-        }
-
-        internal static int? GetStatusCode(IMessage message)
-        {
-            var replyHeaders = message.Properties.Headers;
-            if (! replyHeaders.Contains(StatusCodeHeader))
-            {
-                return null;
-            }
-            return (int) replyHeaders[StatusCodeHeader];
-        }
-    }
-
+    /// <summary>
+    /// Utilities for serializing/deserializing the Newtonsoft JSON-related types
+    /// </summary>
     public class Json
     {
         public static byte[] Serialize(JContainer item)

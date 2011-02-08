@@ -102,7 +102,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
             }
         }
 
-        internal class StubParticipant : IParticipant
+        private class StubParticipant : IParticipant
         {
             public QueryAggregateDigestsResponse QueryAggregateDigests(QueryAggregateDigestsRequest request)
             {

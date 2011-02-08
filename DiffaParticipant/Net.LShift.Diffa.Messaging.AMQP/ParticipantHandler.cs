@@ -14,10 +14,11 @@
 // limitations under the License.
 //
 
-using System;
 using System.Diagnostics;
-using Net.LShift.Diffa.Participants;
+
 using Newtonsoft.Json.Linq;
+
+using Net.LShift.Diffa.Participants;
 
 namespace Net.LShift.Diffa.Messaging.Amqp
 {
