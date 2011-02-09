@@ -45,8 +45,10 @@ namespace Net.LShift.Diffa.Messaging.Amqp
                     return HandleQueryEntityVersionsRequest(request);
                 case "invoke":
                     return HandleActionInvocation(request);
+                case "retrieve_content":
+                    return HandleRetrieveContent(request);
                 default:
-                    return new JsonTransportResponse(404, JArray.Parse(@"[{""error"": ""Endpoint not implemented""}]"));
+                    return new JsonTransportResponse(404, JArray.Parse(@"[{""error"": ""Endpoint '"+request.Endpoint+@"' not implemented""}]"));
             }
         }
 
@@ -66,8 +68,16 @@ namespace Net.LShift.Diffa.Messaging.Amqp
 
         private JsonTransportResponse HandleActionInvocation(JsonTransportRequest request)
         {
+            // TODO un-fudge this DeserializeObject(JContainer.ToString()) nonsense
             var requestParams = JsonConvert.DeserializeObject<ActionInvocation>(request.Body.ToString());
             var response = _participant.Invoke(requestParams);
+            return new JsonTransportResponse(200, JObject.FromObject(response));
+        }
+
+        private JsonTransportResponse HandleRetrieveContent(JsonTransportRequest request)
+        {
+            var requestParams = JsonConvert.DeserializeObject<EntityContentRequest>(request.Body.ToString());
+            var response = _participant.RetrieveEntityContent(requestParams);
             return new JsonTransportResponse(200, JObject.FromObject(response));
         }
     }

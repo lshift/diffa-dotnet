@@ -14,19 +14,29 @@
 // limitations under the License.
 //
 
+
 namespace Net.LShift.Diffa.Participants
 {
     /// <summary>
-    /// Interface that a participant should implement in order to be queried by the RPC server
+    /// Encapsulates a request to retrieve a serialized version of the entity having the specified ID
     /// </summary>
-    public interface IParticipant
+    public class EntityContentRequest
     {
-        QueryAggregateDigestsResponse QueryAggregateDigests(QueryAggregateDigestsRequest request);
+        public string id { get; private set; }
 
-        QueryEntityVersionsResponse QueryEntityVersions(QueryEntityVersionsRequest request);
+        public EntityContentRequest(string id)
+        {
+            this.id = id;
+        }
+    }
 
-        InvocationResult Invoke(ActionInvocation request);
+    public class EntityContentResponse
+    {
+        public string content { get; private set; }
 
-        EntityContentResponse RetrieveEntityContent(EntityContentRequest request);
+        public EntityContentResponse(string content)
+        {
+            this.content = content;
+        }
     }
 }

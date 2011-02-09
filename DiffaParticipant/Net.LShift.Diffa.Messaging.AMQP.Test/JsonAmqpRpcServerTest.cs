@@ -105,6 +105,21 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
         }
 
         [Test]
+        public void ServerShouldRespondToRetrieveContent()
+        {
+            var participant = new StubParticipant();
+            using (var client = new JsonAmqpRpcClient("localhost", "QUEUE_NAME"))
+            {
+                using (var server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant)))
+                {
+                    server.Start();
+                    var response = client.Call("retrieve_content", JObject.Parse(@"{""id"": ""123""}"), 5000);
+                    Assert.AreEqual(JObject.Parse(@"{""content"": ""CONTENT""}").ToString(), response.ToString());
+                }
+            }
+        }
+
+        [Test]
         [ExpectedException(typeof (InvalidOperationException))]
         public void ShouldThrowInvalidOperationExceptionIfStartCalledMultipleTimes()
         {
@@ -135,6 +150,11 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
             public InvocationResult Invoke(ActionInvocation request)
             {
                 return new InvocationResult("RESULT", "OUTPUT");
+            }
+
+            public EntityContentResponse RetrieveEntityContent(EntityContentRequest request)
+            {
+                return new EntityContentResponse("CONTENT");
             }
         }
 

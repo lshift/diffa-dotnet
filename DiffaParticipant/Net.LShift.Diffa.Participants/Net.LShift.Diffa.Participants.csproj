@@ -47,6 +47,7 @@
     <Compile Include="DateCategoryFunction.cs" />
     <Compile Include="DigestBuilder.cs" />
     <Compile Include="ActionInvocation.cs" />
+    <Compile Include="EntityContentRequest.cs" />
     <Compile Include="Utils\AttributesUtils.cs" />
     <Compile Include="Utils\DigestUtils.cs" />
     <Compile Include="EntityVersion.cs" />
