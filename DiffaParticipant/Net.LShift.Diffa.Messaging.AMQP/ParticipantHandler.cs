@@ -14,8 +14,7 @@
 // limitations under the License.
 //
 
-using System.Diagnostics;
-
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using Net.LShift.Diffa.Participants;
@@ -44,6 +43,8 @@ namespace Net.LShift.Diffa.Messaging.Amqp
                     return HandleQueryAggregateDigestsRequest(request);
                 case "query_entity_versions":
                     return HandleQueryEntityVersionsRequest(request);
+                case "invoke":
+                    return HandleActionInvocation(request);
                 default:
                     return new JsonTransportResponse(404, JArray.Parse(@"[{""error"": ""Endpoint not implemented""}]"));
             }
@@ -53,7 +54,6 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         {
             var requestParams = QueryAggregateDigestsRequest.FromJObject(request.Body);
             var response = _participant.QueryAggregateDigests(requestParams);
-            Debug.Assert(response != null);
             return new JsonTransportResponse(200, response.ToJArray());
         }
 
@@ -61,8 +61,14 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         {
             var requestParams = QueryEntityVersionsRequest.FromJArray((JArray) request.Body);
             var response = _participant.QueryEntityVersions(requestParams);
-            Debug.Assert(response != null);
             return new JsonTransportResponse(200, response.ToJArray());
+        }
+
+        private JsonTransportResponse HandleActionInvocation(JsonTransportRequest request)
+        {
+            var requestParams = JsonConvert.DeserializeObject<ActionInvocation>(request.Body.ToString());
+            var response = _participant.Invoke(requestParams);
+            return new JsonTransportResponse(200, JObject.FromObject(response));
         }
     }
 }

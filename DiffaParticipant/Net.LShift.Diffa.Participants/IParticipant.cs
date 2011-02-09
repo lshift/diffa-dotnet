@@ -16,9 +16,15 @@
 
 namespace Net.LShift.Diffa.Participants
 {
+    /// <summary>
+    /// Interface that a participant should implement in order to be queried by the RPC server
+    /// </summary>
     public interface IParticipant
     {
         QueryAggregateDigestsResponse QueryAggregateDigests(QueryAggregateDigestsRequest request);
+
         QueryEntityVersionsResponse QueryEntityVersions(QueryEntityVersionsRequest request);
+
+        InvocationResult Invoke(ActionInvocation request);
     }
 }

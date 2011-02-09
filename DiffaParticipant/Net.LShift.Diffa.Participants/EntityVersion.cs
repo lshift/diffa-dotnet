@@ -21,6 +21,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Net.LShift.Diffa.Participants
 {
+    /// <summary>
+    /// The version digest of an individual entity
+    /// </summary>
     public class EntityVersion : IDigest
     {
         public EntityVersion(string id, IList<String> attributes, DateTime lastUpdated, string digest)

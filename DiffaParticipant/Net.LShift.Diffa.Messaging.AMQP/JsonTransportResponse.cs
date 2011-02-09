@@ -21,9 +21,9 @@ namespace Net.LShift.Diffa.Messaging.Amqp
     public class JsonTransportResponse
     {
         public int Status { get; private set; }
-        public JArray Body { get; private set; }
+        public JContainer Body { get; private set; }
 
-        public JsonTransportResponse(int status, JArray body)
+        public JsonTransportResponse(int status, JContainer body)
         {
             Status = status;
             Body = body;

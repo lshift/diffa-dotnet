@@ -21,6 +21,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Net.LShift.Diffa.Participants
 {
+    /// <summary>
+    /// A digest of aggregated versions
+    /// </summary>
     public class AggregateDigest : IDigest
     {
         const string AttributesKey = "attributes";

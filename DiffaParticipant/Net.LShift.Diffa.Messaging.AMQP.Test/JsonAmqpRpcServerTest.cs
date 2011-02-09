@@ -66,7 +66,6 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
         public void ServerShouldRespondToQueryEntityVersions()
         {
             var participant = new StubParticipant();
-
             using (var client = new JsonAmqpRpcClient("localhost", "QUEUE_NAME"))
             {
                 using (var server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant)))
@@ -86,6 +85,21 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
                         ""metadata"": {""digest"": ""vsn1"", ""id"": ""id1"", ""lastUpdated"": ""0001-01-01T00:00:00.0000000Z""}
                     }]");
                     Assert.AreEqual(expectedResponse.ToString(), response.ToString());
+                }
+            }
+        }
+
+        [Test]
+        public void ServerShouldRespondToInvoke()
+        {
+            var participant = new StubParticipant();
+            using (var client = new JsonAmqpRpcClient("localhost", "QUEUE_NAME"))
+            {
+                using (var server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant)))
+                {
+                    server.Start();
+                    var response = client.Call("invoke", JObject.Parse(@"{""actionId"": ""someAction"", ""entityId"": ""f00""}"), 5000);
+                    Assert.AreEqual(JObject.Parse(@"{""result"": ""RESULT"", ""output"": ""OUTPUT""}").ToString(), response.ToString());
                 }
             }
         }
@@ -116,6 +130,11 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
                     {
                           new EntityVersion("id1", new List<string> {"abc", "def"}, new DateTime(), "vsn1")                                     
                     });
+            }
+
+            public InvocationResult Invoke(ActionInvocation request)
+            {
+                return new InvocationResult("RESULT", "OUTPUT");
             }
         }
 
