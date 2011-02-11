@@ -31,16 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=3.5.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\AppData\Local\WebGAC\Repository\Newtonsoft.Json\3.5.0.2_Release\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RabbitMQ.Client, Version=1.7.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Local\WebGAC\Repository\RabbitMQ.Client\1.7.0.0_Release\RabbitMQ.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="RabbitMQ.Client.MessagePatterns, Version=1.1.0.0, Culture=neutral, PublicKeyToken=9a7c71af6e5c398b, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\AppData\Local\WebGAC\Repository\RabbitMQ.Client.MessagePatterns\1.1.0.0_Release\RabbitMQ.Client.MessagePatterns.dll</HintPath>
-    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=3.5.0.2, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="RabbitMQ.Client, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="RabbitMQ.Client.MessagePatterns, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
