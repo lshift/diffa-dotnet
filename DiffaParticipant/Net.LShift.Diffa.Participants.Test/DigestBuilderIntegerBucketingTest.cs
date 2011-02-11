@@ -30,8 +30,6 @@ namespace Net.LShift.Diffa.Participants.Test
             var buckets = new Dictionary<string, string> {{"someInt", "1000s"}};
             var builder = new DigestBuilder(buckets);
             
-            var lastUpdated = DateTime.Parse("2011-02-02T14:23:44.426Z");
-
             builder.Add("id1", new Dictionary<string, string> { { "someInt", "1234" } }, "vsn1");
             builder.Add("id2", new Dictionary<string, string> { { "someInt", "2345" } }, "vsn2");
             builder.Add("id3", new Dictionary<string, string> { { "someInt", "1235" } }, "vsn3" );
@@ -55,8 +53,6 @@ namespace Net.LShift.Diffa.Participants.Test
         {
             var buckets = new Dictionary<string, string> { { "someInt", "100s" } };
             var builder = new DigestBuilder(buckets);
-
-            var lastUpdated = DateTime.Parse("2011-02-02T14:23:44.426Z");
 
             builder.Add("id1", new Dictionary<string, string> { { "someInt", "123" } }, "vsn1");
             builder.Add("id2", new Dictionary<string, string> { { "someInt", "234" } }, "vsn2");
