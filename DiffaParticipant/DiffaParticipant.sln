@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.LShift.Diffa.Messaging.Amqp", "Net.LShift.Diffa.Messaging.AMQP\Net.LShift.Diffa.Messaging.Amqp.csproj", "{38735842-7EAE-451E-BB34-C1D88ED1E2EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.LShift.Diffa.Participants", "Net.LShift.Diffa.Participants\Net.LShift.Diffa.Participants.csproj", "{D3E42187-4C30-4519-AABC-44AE924F94E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.LShift.Diffa.Messaging.Amqp.Test", "Net.LShift.Diffa.Messaging.AMQP.Test\Net.LShift.Diffa.Messaging.Amqp.Test.csproj", "{D8E2EDD6-F29E-474D-A5A7-A09C619DED65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.LShift.Diffa.Participants.Test", "Net.LShift.Diffa.Participants.Test\Net.LShift.Diffa.Participants.Test.csproj", "{ECFE1B38-99E5-4B2A-85D4-A3637B001CFB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{38735842-7EAE-451E-BB34-C1D88ED1E2EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38735842-7EAE-451E-BB34-C1D88ED1E2EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38735842-7EAE-451E-BB34-C1D88ED1E2EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38735842-7EAE-451E-BB34-C1D88ED1E2EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3E42187-4C30-4519-AABC-44AE924F94E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3E42187-4C30-4519-AABC-44AE924F94E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3E42187-4C30-4519-AABC-44AE924F94E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3E42187-4C30-4519-AABC-44AE924F94E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8E2EDD6-F29E-474D-A5A7-A09C619DED65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8E2EDD6-F29E-474D-A5A7-A09C619DED65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8E2EDD6-F29E-474D-A5A7-A09C619DED65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8E2EDD6-F29E-474D-A5A7-A09C619DED65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECFE1B38-99E5-4B2A-85D4-A3637B001CFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECFE1B38-99E5-4B2A-85D4-A3637B001CFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECFE1B38-99E5-4B2A-85D4-A3637B001CFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECFE1B38-99E5-4B2A-85D4-A3637B001CFB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

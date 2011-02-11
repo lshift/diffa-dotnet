@@ -1,0 +1,4 @@
+*.suo
+*ReSharper*
+DiffaParticipant/*/bin
+DiffaParticipant/*/obj
