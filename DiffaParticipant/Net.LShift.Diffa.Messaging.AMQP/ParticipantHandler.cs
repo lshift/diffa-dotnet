@@ -21,11 +21,20 @@ using Net.LShift.Diffa.Participants;
 
 namespace Net.LShift.Diffa.Messaging.Amqp
 {
+    /// <summary>
+    /// A handler is able to handle JSON requests and produce a JSON response
+    /// </summary>
     public interface IJsonRpcHandler
     {
+        /// <summary>
+        /// Handle a JSON request and produce a JSON response
+        /// </summary>
         JsonTransportResponse HandleRequest(JsonTransportRequest request);
     }
 
+    /// <summary>
+    /// Handles JSON requests, routing them to the correct endpoint on a Participant and producing a JSON response
+    /// </summary>
     public class ParticipantHandler : IJsonRpcHandler
     {
         private readonly IParticipant _participant;

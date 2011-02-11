@@ -96,6 +96,9 @@ namespace Net.LShift.Diffa.Participants
             Values = values;
         }
 
+        /// <summary>
+        /// Produce an IQueryConstraint, which is meaningful to a Participant, from the wire representation
+        /// </summary>
         public IQueryConstraint ToQueryConstraint()
         {
             Validate();

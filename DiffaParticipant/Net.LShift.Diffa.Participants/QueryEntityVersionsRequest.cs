@@ -33,6 +33,9 @@ namespace Net.LShift.Diffa.Participants
             return new QueryEntityVersionsRequest {Constraints = constraints};
         }
 
+        /// <summary>
+        /// Get the usable IQueryConstraints represented by the WireConstraints
+        /// </summary>
         public IList<IQueryConstraint> GetQueryConstraints()
         {
             return Constraints.Select(constraint => constraint.ToQueryConstraint()).ToList();

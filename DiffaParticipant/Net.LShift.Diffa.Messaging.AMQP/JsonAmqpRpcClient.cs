@@ -47,11 +47,24 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             _messaging.Init();
         }
 
+        /// <summary>
+        /// Call a remote procedure
+        /// </summary>
+        /// <param name="endpoint">The endpoint to which to route the request</param>
+        /// <param name="body">The request body</param>
+        /// <returns>The response</returns>
         public JContainer Call(string endpoint, JContainer body)
         {
             return Call(endpoint, body, 60000);
         }
 
+        /// <summary>
+        /// Call a remote procedure with a specified timeout
+        /// </summary>
+        /// <param name="endpoint">The endpoint to which to route the request</param>
+        /// <param name="body">The request body</param>
+        /// <param name="receiveTimeout">Timeout in ms, after which a null response is returned</param>
+        /// <returns>The response</returns>
         public JContainer Call(string endpoint, JContainer body, int receiveTimeout)
         {
             var message = _messaging.CreateMessage();
@@ -71,6 +84,9 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             return Json.Deserialize(reply.Body);
         }
 
+        /// <summary>
+        /// Release resources being used by the RPC client
+        /// </summary>
         public void Dispose()
         {
             _messaging.Cancel();
@@ -78,7 +94,9 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         }
     }
 
-
+    /// <summary>
+    /// Indicates that a server error occurred while servicing the request
+    /// </summary>
     public class AmqpRpcError : Exception
     {
         public AmqpRpcError(string message)

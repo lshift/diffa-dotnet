@@ -21,12 +21,24 @@ namespace Net.LShift.Diffa.Participants
     /// </summary>
     public interface IParticipant
     {
+        /// <summary>
+        /// Produce an aggregate of digests over numerous entities, partitioned (bucketed) according to constraints
+        /// </summary>
         QueryAggregateDigestsResponse QueryAggregateDigests(QueryAggregateDigestsRequest request);
 
+        /// <summary>
+        /// Produce a sequence of digests for individual entities
+        /// </summary>
         QueryEntityVersionsResponse QueryEntityVersions(QueryEntityVersionsRequest request);
 
+        /// <summary>
+        /// Invoke an arbitrary named action. May produce an error response if the named action is not implemented
+        /// </summary>
         InvocationResult Invoke(ActionInvocation request);
 
+        /// <summary>
+        /// Produce a serialized version of a particular entity specified by its ID
+        /// </summary>
         EntityContentResponse RetrieveEntityContent(EntityContentRequest request);
     }
 }
