@@ -51,7 +51,7 @@ namespace Net.LShift.Diffa.Participants
                         {
                             {"digest", Digest},
                             {"id", ID},
-                            {"lastUpdated", LastUpdated.ToUniversalTime().ToString("o")}
+                            {"lastUpdated", LastUpdated.ToUniversalTime().ToString("o")} // ISO 8601 format
                         }}
                 });
         }
