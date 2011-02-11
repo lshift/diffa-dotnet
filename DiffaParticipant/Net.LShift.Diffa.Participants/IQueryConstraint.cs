@@ -21,7 +21,7 @@ namespace Net.LShift.Diffa.Participants
 {
     public interface IQueryConstraint
     {
-        string DataType { get; }
+        string Category { get; }
     }
 
     /// <summary>
@@ -29,20 +29,20 @@ namespace Net.LShift.Diffa.Participants
     /// </summary>
     public class RangeQueryConstraint : IQueryConstraint
     {
-        public string DataType { get; private set; }
+        public string Category { get; private set; }
         public string LowerBound { get; private set; }
         public string UpperBound { get; private set; }
 
         public RangeQueryConstraint(string dataType, string lowerBound, string upperBound)
         {
-            DataType = dataType;
+            Category = dataType;
             LowerBound = lowerBound;
             UpperBound = upperBound;
         }
 
         public override string ToString()
         {
-            return "RangeQueryConstraint(DataType="+DataType+", LowerBound="+LowerBound+", UpperBound="+UpperBound+")";
+            return "RangeQueryConstraint(DataType="+Category+", LowerBound="+LowerBound+", UpperBound="+UpperBound+")";
         }
     }
 
@@ -51,18 +51,18 @@ namespace Net.LShift.Diffa.Participants
     /// </summary>
     public class SetQueryConstraint : IQueryConstraint
     {
-        public string DataType { get; private set; }
+        public string Category { get; private set; }
         public ISet<string> Values { get; private set; }
 
         public SetQueryConstraint(string dataType, ISet<string> values)
         {
-            DataType = dataType;
+            Category = dataType;
             Values = values;
         }
 
         public override string ToString()
         {
-            return "SetQueryConstraint(DataType=" + DataType + ", Values=[" +
+            return "SetQueryConstraint(DataType=" + Category + ", Values=[" +
                    String.Join(", ", new List<string>(Values)) + "])";
         }
     }
@@ -72,11 +72,11 @@ namespace Net.LShift.Diffa.Participants
     /// </summary>
     public class UnboundedRangeQueryConstraint : IQueryConstraint
     {
-        public string DataType { get; private set; }
+        public string Category { get; private set; }
 
         public UnboundedRangeQueryConstraint(string dataType)
         {
-            DataType = dataType;
+            Category = dataType;
         }
     }
 
@@ -114,21 +114,20 @@ namespace Net.LShift.Diffa.Participants
 
         private void Validate()
         {
-            // TODO provide messages
             if (Category == null || Attributes == null)
             {
-                throw new InvalidWireConstraint();
+                throw new InvalidWireConstraint("Missing category");
             }
             if (Values != null)
             {
-                if (Attributes.ContainsKey(Lower) && Attributes.ContainsKey(Upper))
+                if (Attributes.ContainsKey(Lower) || Attributes.ContainsKey(Upper))
                 {
-                    throw new InvalidWireConstraint();
+                    throw new InvalidWireConstraint("Contains values AND range");
                 }
             }
             if ((! Attributes.ContainsKey(Lower)) && Attributes.ContainsKey(Upper))
             {
-                throw new InvalidWireConstraint();
+                throw new InvalidWireConstraint("Incomplete bounds");
             }
         }
 
@@ -138,6 +137,8 @@ namespace Net.LShift.Diffa.Participants
 
     public class InvalidWireConstraint : Exception
     {
-        // TODO constructor which accepts a message
+        public InvalidWireConstraint(string message) : base(message)
+        {
+        }
     }
 }
