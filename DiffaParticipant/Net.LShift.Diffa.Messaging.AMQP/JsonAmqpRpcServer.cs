@@ -15,6 +15,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -164,6 +165,10 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         private static String EndpointFor(IReceivedMessage message)
         {
             var headers = message.Properties.Headers;
+            if (! headers.Contains(AmqpRpc.EndpointHeader))
+            {
+                throw new KeyNotFoundException("Message did not contain header: " + AmqpRpc.EndpointHeader);
+            }
             var endpointHeader = headers[AmqpRpc.EndpointHeader];
             return Encoding.UTF8.GetString((byte[]) endpointHeader);
         }
