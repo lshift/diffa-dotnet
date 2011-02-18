@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateDigest.cs" />
+    <Compile Include="ByNameCategoryFunction.cs" />
     <Compile Include="DateCategoryFunction.cs" />
     <Compile Include="DigestBuilder.cs" />
     <Compile Include="ActionInvocation.cs" />

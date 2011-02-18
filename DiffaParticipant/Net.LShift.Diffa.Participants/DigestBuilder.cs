@@ -74,7 +74,8 @@ namespace Net.LShift.Diffa.Participants
                 {"10s", new IntegerCategoryFunction(10)},
                 {"daily", new DailyCategoryFunction()},
                 {"monthly", new MonthlyCategoryFunction()},
-                {"yearly", new YearlyCategoryFunction()}
+                {"yearly", new YearlyCategoryFunction()},
+                {"by name", new ByNameCategoryFunction()}
             };
 
         internal static ICategoryFunction GetByName(string name)
