@@ -106,11 +106,14 @@ namespace Net.LShift.Diffa.Participants
             {
                 return new SetQueryConstraint(Category, new HashSet<string>(Values));
             }
-            var lower = Attributes[Lower];
-            var upper = Attributes[Upper];
-            if (lower != null && upper != null)
+            if (Attributes.ContainsKey(Lower) && Attributes.ContainsKey(Upper))
             {
-                return new RangeQueryConstraint(Category, lower, upper);
+                var lower = Attributes[Lower];
+                var upper = Attributes[Upper];
+                if (lower != null && upper != null)
+                {
+                    return new RangeQueryConstraint(Category, lower, upper);
+                }
             }
             return new UnboundedRangeQueryConstraint(Category);
         }
