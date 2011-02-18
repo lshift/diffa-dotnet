@@ -90,11 +90,6 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             try
             {
                 var message = _messaging.Receive(100);
-                if (message == null)
-                {
-                    // TODO handle this more appropriately
-                    throw new AmqpException();
-                }
                 return message;
             }
             catch (EndOfStreamException)
@@ -113,6 +108,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             var reply = message.CreateReply();
             var headers = AmqpRpc.CreateHeaders(request.Endpoint, response.Status);
             reply.Properties.Headers = headers;
+            Debug.Print("Sending reply: " + response.Body);
             reply.Body = Json.Serialize(response.Body);
             reply.From = null;
             _messaging.Send(reply);
@@ -121,8 +117,14 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         private void ReceiveAckHandleReply()
         {
             var message = Receive();
+            if (message == null)
+            {
+                return;
+            }
             Ack(message);
-            var request = new JsonTransportRequest(EndpointFor(message), Json.Deserialize(message.Body));
+            var messageBody = Json.Deserialize(message.Body);
+            Debug.Print("Received message: " + messageBody);
+            var request = new JsonTransportRequest(EndpointFor(message), messageBody);
             try
             {
                 var response = _handler.HandleRequest(request);
