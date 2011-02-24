@@ -36,103 +36,73 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
         private readonly MockRepository _mockery = new MockRepository();
         private readonly Logger _log = CreateLogging();
 
-        [Test]
-        public void ServerCanStartAndDispose()
+        private IParticipant _participant;
+        private JsonAmqpRpcServer _server;
+        private JsonAmqpRpcClient _client;
+
+        [SetUp]
+        public void SetUp()
         {
-            // Simple smoke test for the worker thread disposal; just starts and then disposes the server.
-            var participant = _mockery.StrictMock<IParticipant>();
-            using (var server = new JsonAmqpRpcServer("localhost", "DUMMY_QUEUE_NAME", new ParticipantHandler(participant),
-                _log))
-            {
-                server.Start();
-            }
+            var participant = new StubParticipant();
+            _server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant));
+            _server.Start();
+            _client = new JsonAmqpRpcClient("localhost", "QUEUE_NAME");
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _client.Dispose();
+            _server.Dispose();
         }
 
         [Test]
         public void ServerShouldRespondToQueryAggregateDigests()
         {
-            var participant = new StubParticipant();
-            
-            using (var client = new JsonAmqpRpcClient("localhost", "QUEUE_NAME"))
-            {
-                using (var server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant)))
-                {
-                    server.Start();
-                    var response = client.Call("query_aggregate_digests", JObject.Parse(@"{""constraints"": [], ""buckets"": {}}"));
-                    var expectedResponse = JArray.Parse(@"[{""attributes"": [""2011-01""],
-                                                            ""metadata"": {""digest"": ""4dac11f9c09f3ebc8842790cd5dec24a""}}]");
-                    Assert.AreEqual(expectedResponse.ToString(), response.ToString());
-                }
-            }
+            var response = _client.Call("query_aggregate_digests", JObject.Parse(@"{""constraints"": [], ""buckets"": {}}"));
+            var expectedResponse = JArray.Parse(@"[{""attributes"": [""2011-01""],
+                                                    ""metadata"": {""digest"": ""4dac11f9c09f3ebc8842790cd5dec24a""}}]");
+            Assert.AreEqual(expectedResponse.ToString(), response.ToString());
         }
 
         [Test]
         public void ServerShouldRespondToQueryEntityVersions()
         {
-            var participant = new StubParticipant();
-            using (var client = new JsonAmqpRpcClient("localhost", "QUEUE_NAME"))
-            {
-                using (var server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant)))
-                {
-                    server.Start();
-                    var json = @"[
-	                    {
-		                    ""attributes"": {""lower"": ""2011-01-01T00:00:00.000Z"",
-									         ""upper"": ""2011-12-31T23:59:59.999Z""},
-		                    ""values"": null,
-		                    ""category"": ""bizDate""
-                        }
-                    ]";
-                    var response = client.Call("query_entity_versions", JArray.Parse(json), 5000);
-                    var expectedResponse = JArray.Parse(@"[{
-                        ""attributes"": [""abc"", ""def""],
-                        ""metadata"": {""digest"": ""vsn1"", ""id"": ""id1"", ""lastUpdated"": ""0001-01-01T00:00:00.0000000Z""}
-                    }]");
-                    Assert.AreEqual(expectedResponse.ToString(), response.ToString());
+            var json = @"[
+	            {
+		            ""attributes"": {""lower"": ""2011-01-01T00:00:00.000Z"",
+									    ""upper"": ""2011-12-31T23:59:59.999Z""},
+		            ""values"": null,
+		            ""category"": ""bizDate""
                 }
-            }
+            ]";
+            var response = _client.Call("query_entity_versions", JArray.Parse(json), 5000);
+            var expectedResponse = JArray.Parse(@"[{
+                ""attributes"": [""abc"", ""def""],
+                ""metadata"": {""digest"": ""vsn1"", ""id"": ""id1"", ""lastUpdated"": ""0001-01-01T00:00:00.0000000Z""}
+            }]");
+            Assert.AreEqual(expectedResponse.ToString(), response.ToString());
         }
 
         [Test]
         public void ServerShouldRespondToInvoke()
         {
-            var participant = new StubParticipant();
-            using (var client = new JsonAmqpRpcClient("localhost", "QUEUE_NAME"))
-            {
-                using (var server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant)))
-                {
-                    server.Start();
-                    var response = client.Call("invoke", JObject.Parse(@"{""actionId"": ""someAction"", ""entityId"": ""f00""}"), 5000);
-                    Assert.AreEqual(JObject.Parse(@"{""result"": ""RESULT"", ""output"": ""OUTPUT""}").ToString(), response.ToString());
-                }
-            }
+            var response = _client.Call("invoke", JObject.Parse(@"{""actionId"": ""someAction"", ""entityId"": ""f00""}"), 5000);
+            Assert.AreEqual(JObject.Parse(@"{""result"": ""RESULT"", ""output"": ""OUTPUT""}").ToString(), response.ToString());
         }
 
         [Test]
         public void ServerShouldRespondToRetrieveContent()
         {
-            var participant = new StubParticipant();
-            using (var client = new JsonAmqpRpcClient("localhost", "QUEUE_NAME"))
-            {
-                using (var server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant)))
-                {
-                    server.Start();
-                    var response = client.Call("retrieve_content", JObject.Parse(@"{""id"": ""123""}"), 5000);
-                    Assert.AreEqual(JObject.Parse(@"{""content"": ""CONTENT""}").ToString(), response.ToString());
-                }
-            }
+            var response = _client.Call("retrieve_content", JObject.Parse(@"{""id"": ""123""}"), 5000);
+            Assert.AreEqual(JObject.Parse(@"{""content"": ""CONTENT""}").ToString(), response.ToString());
         }
 
         [Test]
         [ExpectedException(typeof (InvalidOperationException))]
         public void ShouldThrowInvalidOperationExceptionIfStartCalledMultipleTimes()
         {
-            var participant = new StubParticipant();
-            using (var server = new JsonAmqpRpcServer("localhost", "QUEUE_NAME", new ParticipantHandler(participant)))
-            {
-                server.Start();
-                server.Start();
-            }
+            _server.Start();
         }
 
         private class StubParticipant : IParticipant
