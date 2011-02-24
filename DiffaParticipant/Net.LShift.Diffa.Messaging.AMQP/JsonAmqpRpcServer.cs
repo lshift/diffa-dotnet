@@ -143,7 +143,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             }
             catch (Exception e)
             {
-                var response = new JsonTransportResponse(500, JObject.Parse(@"{""error"": """+e.Message+@"""}"));
+                var response = JsonTransportResponse.Error(e.Message);
                 Reply(message, request, response);
                 throw;
             }

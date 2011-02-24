@@ -57,7 +57,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
                 case "retrieve_content":
                     return HandleRetrieveContent(request);
                 default:
-                    return new JsonTransportResponse(404, JArray.Parse(@"[{""error"": ""Endpoint '"+request.Endpoint+@"' not implemented""}]"));
+                    return JsonTransportResponse.NotFound("Endpoint '"+request.Endpoint+@"' not implemented");
             }
         }
 
