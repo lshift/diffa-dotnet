@@ -16,9 +16,12 @@
 
 using System;
 using System.Collections.Generic;
-
+using NLog.Config;
+using NLog.Win32.Targets;
 using NUnit.Framework;
 using Rhino.Mocks;
+
+using NLog;
 
 using Newtonsoft.Json.Linq;
 
@@ -31,14 +34,15 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
     {
 
         private readonly MockRepository _mockery = new MockRepository();
+        private readonly Logger _log = CreateLogging();
 
         [Test]
         public void ServerCanStartAndDispose()
         {
             // Simple smoke test for the worker thread disposal; just starts and then disposes the server.
             var participant = _mockery.StrictMock<IParticipant>();
-            using (var server = new JsonAmqpRpcServer("localhost", "DUMMY_QUEUE_NAME",
-                new ParticipantHandler(participant)))
+            using (var server = new JsonAmqpRpcServer("localhost", "DUMMY_QUEUE_NAME", new ParticipantHandler(participant),
+                _log))
             {
                 server.Start();
             }
@@ -158,5 +162,14 @@ namespace Net.LShift.Diffa.Messaging.Amqp.Test
             }
         }
 
+        private static Logger CreateLogging()
+        {
+            var config = new LoggingConfiguration();
+            var target = new ColoredConsoleTarget() {Layout = "${date:format=HH\\:MM\\:ss} ${logger} ${message}"};
+            config.AddTarget("console", target);
+            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, target));
+            LogManager.Configuration = config;
+            return LogManager.GetCurrentClassLogger();
+        }
     }
 }

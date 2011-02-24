@@ -16,14 +16,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using NLog;
 using RabbitMQ.Client.MessagePatterns.Unicast;
 
 namespace Net.LShift.Diffa.Messaging.Amqp
@@ -38,8 +37,20 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         private Thread _worker;
         private bool _disposing;
 
+        private readonly Logger _log;
+
         public JsonAmqpRpcServer(string hostName, string queueName, IJsonRpcHandler handler)
         {
+            _log = LogManager.GetCurrentClassLogger();
+            _log.Info("AMQP RPC server starting");
+            _messaging = AmqpRpc.CreateMessaging(AmqpRpc.CreateConnector(hostName), queueName);
+            _handler = handler;
+        }
+
+        public JsonAmqpRpcServer(string hostName, string queueName, IJsonRpcHandler handler, Logger logger)
+        {
+            _log = logger;
+            _log.Info("AMQP RPC server starting");
             _messaging = AmqpRpc.CreateMessaging(AmqpRpc.CreateConnector(hostName), queueName);
             _handler = handler;
         }
@@ -108,7 +119,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             var reply = message.CreateReply();
             var headers = AmqpRpc.CreateHeaders(request.Endpoint, response.Status);
             reply.Properties.Headers = headers;
-            Debug.Print("Sending reply: " + response.Body);
+            _log.Debug("Sending reply: " + response.Body);
             reply.Body = Json.Serialize(response.Body);
             reply.From = null;
             _messaging.Send(reply);
@@ -123,7 +134,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             }
             Ack(message);
             var messageBody = Json.Deserialize(message.Body);
-            Debug.Print("Received message: " + messageBody);
+            _log.Debug("Received message: " + messageBody);
             var request = new JsonTransportRequest(EndpointFor(message), messageBody);
             try
             {
@@ -173,16 +184,6 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             }
             var endpointHeader = headers[AmqpRpc.EndpointHeader];
             return Encoding.UTF8.GetString((byte[]) endpointHeader);
-        }
-
-        private static EventLog CreateEventLog()
-        {
-            var eventLogSource = typeof(JsonAmqpRpcServer).ToString();
-            if (!EventLog.SourceExists(eventLogSource))
-            {
-                EventLog.CreateEventSource(eventLogSource, "Application");
-            }
-            return new EventLog { Source = eventLogSource };
         }
 
     }
