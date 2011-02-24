@@ -114,10 +114,10 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             _messaging.Ack(message);
         }
 
-        private void Reply(IReceivedMessage message, JsonTransportRequest request, JsonTransportResponse response)
+        private void Reply(IReceivedMessage message, JsonTransportResponse response)
         {
             var reply = message.CreateReply();
-            var headers = AmqpRpc.CreateHeaders(request.Endpoint, response.Status);
+            var headers = AmqpRpc.CreateHeaders(null, response.Status);
             reply.Properties.Headers = headers;
             _log.Debug("Sending reply: " + response.Body);
             reply.Body = Json.Serialize(response.Body);
@@ -133,18 +133,26 @@ namespace Net.LShift.Diffa.Messaging.Amqp
                 return;
             }
             Ack(message);
-            var messageBody = Json.Deserialize(message.Body);
-            _log.Debug("Received message: " + messageBody);
-            var request = new JsonTransportRequest(EndpointFor(message), messageBody);
+
             try
             {
+                var messageBody = Json.Deserialize(message.Body);
+                _log.Debug("Received message: " + messageBody);
+                var request = new JsonTransportRequest(EndpointFor(message), messageBody);
                 var response = _handler.HandleRequest(request);
-                Reply(message, request, response);
+                Reply(message, response);
+            }
+            catch (Json.JsonDeserializationError e)
+            {
+                var response = JsonTransportResponse.Error(e.Message);
+                _log.Error(e);
+                Reply(message, response);
             }
             catch (Exception e)
             {
                 var response = JsonTransportResponse.Error(e.Message);
-                Reply(message, request, response);
+                _log.Error(e);
+                Reply(message, response);
                 throw;
             }
         }
@@ -210,7 +218,22 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             }
             catch (Exception)
             {
-                return JArray.Parse(decodedString);
+                try
+                {
+                    return JArray.Parse(decodedString);
+                }
+                catch (Exception e)
+                {
+                    throw new JsonDeserializationError(e.Message);
+                }
+            }
+        }
+
+        public class JsonDeserializationError : Exception
+        {
+            public JsonDeserializationError(string message) : base(message)
+            {
+                
             }
         }
 
