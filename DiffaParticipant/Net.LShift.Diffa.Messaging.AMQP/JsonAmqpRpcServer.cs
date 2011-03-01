@@ -87,13 +87,14 @@ namespace Net.LShift.Diffa.Messaging.Amqp
                 _disposing = true;
             }
             _messaging.Cancel();
-            if (_worker != null)
+            if (_worker == null)
             {
-                _worker.Join(2000);
-                _messaging.Dispose();
-                _worker.Join(2000);
-                _worker = null;
+                return;
             }
+            _worker.Join(2000);
+            _messaging.Dispose();
+            _worker.Join(2000);
+            _worker = null;
         }
 
         private IReceivedMessage Receive()
@@ -142,18 +143,11 @@ namespace Net.LShift.Diffa.Messaging.Amqp
                 var response = _handler.HandleRequest(request);
                 Reply(message, response);
             }
-            catch (Json.JsonDeserializationError e)
-            {
-                var response = JsonTransportResponse.Error(e.Message);
-                _log.Error(e);
-                Reply(message, response);
-            }
             catch (Exception e)
             {
                 var response = JsonTransportResponse.Error(e.Message);
                 _log.Error(e);
                 Reply(message, response);
-                throw;
             }
         }
 
