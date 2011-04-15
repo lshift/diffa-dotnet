@@ -16,14 +16,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using NLog;
 using RabbitMQ.Client.MessagePatterns.Unicast;
 
 namespace Net.LShift.Diffa.Messaging.Amqp
@@ -38,8 +37,20 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         private Thread _worker;
         private bool _disposing;
 
+        private readonly Logger _log;
+
         public JsonAmqpRpcServer(string hostName, string queueName, IJsonRpcHandler handler)
         {
+            _log = LogManager.GetCurrentClassLogger();
+            _log.Info("AMQP RPC server starting");
+            _messaging = AmqpRpc.CreateMessaging(AmqpRpc.CreateConnector(hostName), queueName);
+            _handler = handler;
+        }
+
+        public JsonAmqpRpcServer(string hostName, string queueName, IJsonRpcHandler handler, Logger logger)
+        {
+            _log = logger;
+            _log.Info("AMQP RPC server starting");
             _messaging = AmqpRpc.CreateMessaging(AmqpRpc.CreateConnector(hostName), queueName);
             _handler = handler;
         }
@@ -76,13 +87,14 @@ namespace Net.LShift.Diffa.Messaging.Amqp
                 _disposing = true;
             }
             _messaging.Cancel();
-            if (_worker != null)
+            if (_worker == null)
             {
-                _worker.Join(2000);
-                _messaging.Dispose();
-                _worker.Join(2000);
-                _worker = null;
+                return;
             }
+            _worker.Join(2000);
+            _messaging.Dispose();
+            _worker.Join(2000);
+            _worker = null;
         }
 
         private IReceivedMessage Receive()
@@ -103,12 +115,12 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             _messaging.Ack(message);
         }
 
-        private void Reply(IReceivedMessage message, JsonTransportRequest request, JsonTransportResponse response)
+        private void Reply(IReceivedMessage message, JsonTransportResponse response)
         {
             var reply = message.CreateReply();
-            var headers = AmqpRpc.CreateHeaders(request.Endpoint, response.Status);
+            var headers = AmqpRpc.CreateHeaders(null, response.Status);
             reply.Properties.Headers = headers;
-            Debug.Print("Sending reply: " + response.Body);
+            _log.Debug("Sending reply: " + response.Body);
             reply.Body = Json.Serialize(response.Body);
             reply.From = null;
             _messaging.Send(reply);
@@ -122,19 +134,20 @@ namespace Net.LShift.Diffa.Messaging.Amqp
                 return;
             }
             Ack(message);
-            var messageBody = Json.Deserialize(message.Body);
-            Debug.Print("Received message: " + messageBody);
-            var request = new JsonTransportRequest(EndpointFor(message), messageBody);
+
             try
             {
+                var messageBody = Json.Deserialize(message.Body);
+                _log.Debug("Received message: " + messageBody);
+                var request = new JsonTransportRequest(EndpointFor(message), messageBody);
                 var response = _handler.HandleRequest(request);
-                Reply(message, request, response);
+                Reply(message, response);
             }
             catch (Exception e)
             {
-                var response = new JsonTransportResponse(500, JObject.Parse(@"{""error"": """+e.Message+@"""}"));
-                Reply(message, request, response);
-                throw;
+                var response = JsonTransportResponse.Error(e.Message);
+                _log.Error(e);
+                Reply(message, response);
             }
         }
 
@@ -175,16 +188,6 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             return Encoding.UTF8.GetString((byte[]) endpointHeader);
         }
 
-        private static EventLog CreateEventLog()
-        {
-            var eventLogSource = typeof(JsonAmqpRpcServer).ToString();
-            if (!EventLog.SourceExists(eventLogSource))
-            {
-                EventLog.CreateEventSource(eventLogSource, "Application");
-            }
-            return new EventLog { Source = eventLogSource };
-        }
-
     }
 
     /// <summary>
@@ -209,7 +212,22 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             }
             catch (Exception)
             {
-                return JArray.Parse(decodedString);
+                try
+                {
+                    return JArray.Parse(decodedString);
+                }
+                catch (Exception e)
+                {
+                    throw new JsonDeserializationError(e.Message);
+                }
+            }
+        }
+
+        public class JsonDeserializationError : Exception
+        {
+            public JsonDeserializationError(string message) : base(message)
+            {
+                
             }
         }
 

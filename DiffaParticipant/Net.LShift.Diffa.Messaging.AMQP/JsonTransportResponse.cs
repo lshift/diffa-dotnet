@@ -28,5 +28,15 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             Status = status;
             Body = body;
         }
+
+        public static JsonTransportResponse Error(string message)
+        {
+            return new JsonTransportResponse(500, JObject.Parse(@"{""error"": """ + message + @"""}"));
+        }
+
+        public static JsonTransportResponse NotFound(string message)
+        {
+            return new JsonTransportResponse(404, JObject.Parse(@"{""error"": """ + message + @"""}"));
+        }
     }
 }

@@ -27,10 +27,15 @@ namespace Net.LShift.Diffa.Participants
     {
         public IList<WireConstraint> Constraints { get; private set; }
 
+        public QueryEntityVersionsRequest(IList<WireConstraint> wireConstraints)
+        {
+            Constraints = wireConstraints;
+        }
+
         public static QueryEntityVersionsRequest FromJArray(JArray jArray)
         {
             var constraints = jArray.Children().Select(child => JsonConvert.DeserializeObject<WireConstraint>(child.ToString())).ToList();
-            return new QueryEntityVersionsRequest {Constraints = constraints};
+            return new QueryEntityVersionsRequest(constraints);
         }
 
         /// <summary>
