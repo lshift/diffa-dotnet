@@ -55,5 +55,12 @@ namespace Net.LShift.Diffa.Participants
                         }}
                 });
         }
+
+        public override string ToString()
+        {
+            var attributes = String.Join(", ", Attributes);
+            var asString = string.Format("EntityVersion(Id={0},Attributes=[{1}],Digest={2},LastUpdated={3})", ID, attributes, Digest, LastUpdated);
+            return asString;
+        }
     }
 }
