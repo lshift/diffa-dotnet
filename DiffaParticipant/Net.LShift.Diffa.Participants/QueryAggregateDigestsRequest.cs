@@ -48,6 +48,13 @@ namespace Net.LShift.Diffa.Participants
             }
             return request;
         }
+
+        public override string ToString()
+        {
+            var cons = String.Join(", ", Constraints);
+            var bucks = String.Join(", ", Buckets);
+            return string.Format("QAD(Constraints={0},Buckets=[{1}]",cons,bucks);;
+        }
     }
 
     public class QueryAggregateDigestsResponse

@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,7 +45,12 @@ namespace Net.LShift.Diffa.Participants
         public IList<IQueryConstraint> GetQueryConstraints()
         {
             return Constraints.Select(constraint => constraint.ToQueryConstraint()).ToList();
-        } 
+        }
+
+        public override string ToString()
+        {       
+            return string.Format("QEV(Constraints={0}]", String.Join(", ", Constraints)); ;
+        }
     }
 
     public class QueryEntityVersionsResponse

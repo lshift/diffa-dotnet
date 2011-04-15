@@ -118,6 +118,17 @@ namespace Net.LShift.Diffa.Participants
             return new UnboundedRangeQueryConstraint(Category);
         }
 
+        public override string ToString()
+        {
+            var attributes = String.Join(", ", Attributes);
+            string values = null;
+            if (null != Values)
+            {
+                values = String.Join(", ", Values);    
+            }
+            return string.Format("Category(Category={0},Attributes=[{1}],Values=[{2}])", Category, attributes, values);
+        }
+
         private void Validate()
         {
             if (Category == null || Attributes == null)
