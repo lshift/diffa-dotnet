@@ -120,7 +120,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             var reply = message.CreateReply();
             var headers = AmqpRpc.CreateHeaders(null, response.Status);
             reply.Properties.Headers = headers;
-            _log.Debug("Sending reply: " + response.Body);
+            _log.Debug("Sending reply: {0}", response.Body);
             reply.Body = Json.Serialize(response.Body);
             reply.From = null;
             _messaging.Send(reply);
@@ -138,7 +138,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
             try
             {
                 var messageBody = Json.Deserialize(message.Body);
-                _log.Debug("Received message: " + messageBody);
+                _log.Debug("Received message: {0}", messageBody);
                 var request = new JsonTransportRequest(EndpointFor(message), messageBody);
                 var response = _handler.HandleRequest(request);
                 Reply(message, response);
