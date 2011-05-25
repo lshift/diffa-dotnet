@@ -42,15 +42,7 @@ namespace Net.LShift.Diffa.Messaging.Amqp
         public JsonAmqpRpcServer(string hostName, string queueName, IJsonRpcHandler handler)
         {
             _log = LogManager.GetCurrentClassLogger();
-            _log.Info("AMQP RPC server starting");
-            _messaging = AmqpRpc.CreateMessaging(AmqpRpc.CreateConnector(hostName), queueName);
-            _handler = handler;
-        }
-
-        public JsonAmqpRpcServer(string hostName, string queueName, IJsonRpcHandler handler, Logger logger)
-        {
-            _log = logger;
-            _log.Info("AMQP RPC server starting");
+            _log.Info("AMQP RPC server starting: host = {0}; queue = {1}", hostName, queueName);
             _messaging = AmqpRpc.CreateMessaging(AmqpRpc.CreateConnector(hostName), queueName);
             _handler = handler;
         }
