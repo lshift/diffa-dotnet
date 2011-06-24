@@ -24,7 +24,7 @@ namespace Net.LShift.Diffa.Participants.Test
         [Test]
         public void OwningPartitionNameShouldEqualBaseOfPartitionRange()
         {
-            var categoryFunction = new MonthlyCategoryFunction();
+            var categoryFunction = new MonthlyCategoryFunction("bizDate");
             Assert.AreEqual("2010-06", categoryFunction.OwningPartition("2010-06-05"));
         }
 
@@ -32,8 +32,8 @@ namespace Net.LShift.Diffa.Participants.Test
         [ExpectedException(typeof(InvalidAttributeValueException))]
         public void ShouldThrowInvalidAttributeExceptionWhenValueDoesNotParseToInteger()
         {
-            var categoryFunction = new MonthlyCategoryFunction();
-            categoryFunction.OwningPartition("NOT_A_DATE");
+          var categoryFunction = new MonthlyCategoryFunction("bizDate");
+          categoryFunction.OwningPartition("NOT_A_DATE");
         }
     }
 }

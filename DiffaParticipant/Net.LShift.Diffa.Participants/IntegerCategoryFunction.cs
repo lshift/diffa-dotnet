@@ -18,21 +18,21 @@ using System;
 
 namespace Net.LShift.Diffa.Participants
 {
-    public class IntegerCategoryFunction : ICategoryFunction
+    public class IntegerCategoryFunction : BaseCategoryFunction
     {
         private readonly int _denominator;
 
-        public IntegerCategoryFunction(int denominator)
+        public IntegerCategoryFunction(string attrName, int denominator) : base(attrName)
         {
             _denominator = denominator;
         }
 
-        public string Name
+        public override string Name
         {
             get { return _denominator + "s"; }
         }
 
-        public string OwningPartition(string value)
+        public override string OwningPartition(string value)
         {
             try
             {

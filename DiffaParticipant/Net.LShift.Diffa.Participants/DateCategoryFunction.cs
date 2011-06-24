@@ -18,12 +18,16 @@ using System;
 
 namespace Net.LShift.Diffa.Participants
 {
-    public abstract class DateCategoryFunction : ICategoryFunction
+    public abstract class DateCategoryFunction : BaseCategoryFunction
     {
-        public abstract string Name { get; }
+        public abstract override string Name { get; }
         public abstract string Pattern { get; }
 
-        public string OwningPartition(string value)
+        protected DateCategoryFunction(string attributeName)
+          : base(attributeName) {
+        }
+
+        public override string OwningPartition(string value)
         {
             try
             {
@@ -39,6 +43,9 @@ namespace Net.LShift.Diffa.Participants
 
     public class DailyCategoryFunction : DateCategoryFunction
     {
+        public DailyCategoryFunction(string attributeName) : base(attributeName) {
+        }
+
         public override string Name
         {
             get { return "daily"; }
@@ -52,6 +59,9 @@ namespace Net.LShift.Diffa.Participants
 
     public class MonthlyCategoryFunction : DateCategoryFunction
     {
+        public MonthlyCategoryFunction(string attributeName) : base(attributeName) {
+        }
+
         public override string Name
         {
             get { return "monthly"; }
@@ -65,6 +75,9 @@ namespace Net.LShift.Diffa.Participants
 
     public class YearlyCategoryFunction : DateCategoryFunction
     {
+        public YearlyCategoryFunction(string attributeName) : base(attributeName) {
+        }
+
         public override string Name
         {
             get { return "yearly"; }

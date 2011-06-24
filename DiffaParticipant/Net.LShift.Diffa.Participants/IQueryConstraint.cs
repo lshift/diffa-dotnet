@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Net.LShift.Diffa.Participants
 {
@@ -46,6 +47,46 @@ namespace Net.LShift.Diffa.Participants
         }
     }
 
+
+
+    /// <summary>
+    /// Represents a range of values as a sequence containing upper and lower bounds
+    /// </summary>
+    public class DateRangeQueryConstraint : IQueryConstraint
+    {
+      public string Category { get; private set; }
+      public DateTime? LowerBound { get; private set; }
+      public DateTime? UpperBound { get; private set; }
+
+      public DateRangeQueryConstraint(string attrName, string lowerBound, string upperBound) : this(attrName, ParseBound(lowerBound), ParseBound(upperBound)) {
+      }
+
+      public DateRangeQueryConstraint(string attrName, DateTime? lowerBound, DateTime? upperBound) {
+        Category = attrName;
+        LowerBound = lowerBound;
+        UpperBound = upperBound;
+      }
+
+      public override string ToString()
+      {
+        return "RangeQueryConstraint(DataType=" + Category + ", LowerBound=" + LowerBound + ", UpperBound=" + UpperBound + ")";
+      }
+
+      public bool Includes(DateTime t) {
+        if (LowerBound != null && t < LowerBound.Value) return false;
+        if (UpperBound != null && t > UpperBound.Value) return false;
+        return true;
+      }
+
+      private static DateTime? ParseBound(string s) {
+        if (s == null) {
+          return null;
+        } else {
+          return DateTime.Parse(s, null, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+        }
+      }
+    }
+
     /// <summary>
     /// Represents a (not necessarily contiguous) set of values with which to constrain
     /// </summary>
@@ -65,6 +106,10 @@ namespace Net.LShift.Diffa.Participants
             return "SetQueryConstraint(DataType=" + Category + ", Values=[" +
                    String.Join(", ", new List<string>(Values)) + "])";
         }
+
+      public bool Includes(string val) {
+        return Values.Contains(val);
+      }
     }
 
     /// <summary>
