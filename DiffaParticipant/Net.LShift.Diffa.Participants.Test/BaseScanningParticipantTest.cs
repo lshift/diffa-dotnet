@@ -261,24 +261,24 @@ namespace Net.LShift.Diffa.Participants.Test {
       new DummyEntity { Id = "id4", BizDate = new DateTime(2010, 1, 15), BookId = "1", Version = "v4" }
     };
 
-    protected override ICategoryFunction[] DetermineAggregations(System.Collections.Specialized.NameValueCollection requestParams) {
+    protected override IEnumerable<ICategoryFunction> DetermineAggregations(System.Collections.Specialized.NameValueCollection requestParams) {
       var builder = new AggregationBuilder(requestParams);
       builder.MaybeAddDateAggregation("bizDate");
       builder.MaybeAddByNameAggregation("bookId");
-      return builder.ToList().ToArray();
+      return builder.ToList();
     }
 
-    protected override IQueryConstraint[] DetermineConstraints(System.Collections.Specialized.NameValueCollection requestParams) {
+    protected override IEnumerable<IQueryConstraint> DetermineConstraints(System.Collections.Specialized.NameValueCollection requestParams) {
       var builder = new ConstraintsBuilder(requestParams);
       builder.MaybeAddDateRangeConstraint("bizDate");
       builder.MaybeAddSetConstraint("bookId");
-      return builder.ToList().ToArray();
+      return builder.ToList();
     }
 
-    protected override IEnumerable<ScanResultEntry> Query(IQueryConstraint[] constraints, ICategoryFunction[] aggregations) {
+    protected override IEnumerable<ScanResultEntry> Query(IEnumerable<IQueryConstraint> constraints, IEnumerable<ICategoryFunction> aggregations) {
       var constrainedData = _data.Where(d => d.Satisfies(constraints));
 
-      if (aggregations.Length > 0) {
+      if (aggregations.Count() > 0) {
         var digester = new DigestBuilder(aggregations);
         foreach (var d in constrainedData) digester.Add(d.Id, d.Attributes, d.Version);
         return digester.GetScanResults().ToArray();

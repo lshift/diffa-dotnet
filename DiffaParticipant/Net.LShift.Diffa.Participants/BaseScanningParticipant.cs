@@ -36,6 +36,10 @@ namespace Net.LShift.Diffa.Participants
 
       try {
         var results = Query(constraints, aggregations);
+
+        // Ensure that we have a content type set on the response
+        WebOperationContext.Current.OutgoingResponse.ContentType = "application/json";
+
         return new MemoryStream(Encoding.UTF8.GetBytes(new JArray(results.Select(r => r.ToJObject())).ToString()));
       } catch (Exception ex) {
         Console.WriteLine(ex);
@@ -50,15 +54,15 @@ namespace Net.LShift.Diffa.Participants
     /// <param name="constraints">the constraints to query within</param>
     /// <param name="aggregations">the aggregation factors to apply to the result</param>
     /// <returns>the version information to return to the client</returns>
-    protected abstract IEnumerable<ScanResultEntry> Query(IQueryConstraint[] constraints, ICategoryFunction[] aggregations);
+    protected abstract IEnumerable<ScanResultEntry> Query(IEnumerable<IQueryConstraint> constraints, IEnumerable<ICategoryFunction> aggregations);
 
     /// <summary>
     /// Callback method to be implemented by subclasses allowing the request to be inspected to determine the appropriate
     /// constraints.
     /// </summary>
     /// <param name="requestParams">the parameters to the scan request</param>
-    /// <returns>an array of query constraints, or IQueryContraints[0] if no constraints are specified</returns>
-    protected virtual IQueryConstraint[] DetermineConstraints(NameValueCollection requestParams) {
+    /// <returns>an enumerable of query constraints, or IQueryContraints[0] if no constraints are specified</returns>
+    protected virtual IEnumerable<IQueryConstraint> DetermineConstraints(NameValueCollection requestParams) {
       return new IQueryConstraint[0];
     }
 
@@ -67,8 +71,8 @@ namespace Net.LShift.Diffa.Participants
     /// aggregation factors.
     /// </summary>
     /// <param name="requestParams">the parameters to the scan request</param>
-    /// <returns>an array of category functions, or ICategoryFunction[0] if no aggregation factors are specified</returns>
-    protected virtual ICategoryFunction[] DetermineAggregations(NameValueCollection requestParams) {
+    /// <returns>an enumerable of category functions, or ICategoryFunction[0] if no aggregation factors are specified</returns>
+    protected virtual IEnumerable<ICategoryFunction> DetermineAggregations(NameValueCollection requestParams) {
       return new ICategoryFunction[0];
     }
   }

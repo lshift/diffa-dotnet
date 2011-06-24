@@ -52,17 +52,16 @@ namespace Net.LShift.Diffa.Participants
     /// <summary>
     /// Represents a range of values as a sequence containing upper and lower bounds
     /// </summary>
-    public class DateRangeQueryConstraint : IQueryConstraint
+    public class DateRangeQueryConstraint : RangeQueryConstraint
     {
-      public string Category { get; private set; }
-      public DateTime? LowerBound { get; private set; }
-      public DateTime? UpperBound { get; private set; }
+      public new DateTime? LowerBound { get; private set; }
+      public new DateTime? UpperBound { get; private set; }
 
       public DateRangeQueryConstraint(string attrName, string lowerBound, string upperBound) : this(attrName, ParseBound(lowerBound), ParseBound(upperBound)) {
       }
 
-      public DateRangeQueryConstraint(string attrName, DateTime? lowerBound, DateTime? upperBound) {
-        Category = attrName;
+      public DateRangeQueryConstraint(string attrName, DateTime? lowerBound, DateTime? upperBound) :
+          base(attrName, lowerBound != null ? lowerBound.Value.ToString("yyyy-MM-dd") : null, upperBound != null ? upperBound.Value.ToString("yyyy-MM-dd") : null) {
         LowerBound = lowerBound;
         UpperBound = upperBound;
       }

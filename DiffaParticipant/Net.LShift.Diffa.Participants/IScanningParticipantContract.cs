@@ -29,7 +29,7 @@ namespace Net.LShift.Diffa.Participants
   /// </summary>
   [ServiceContract(Namespace = "Net.LShift.Diffa")]
   public interface IScanningParticipantContract {
-    [OperationContract]
+    [OperationContract] 
     [WebGet(UriTemplate = "", ResponseFormat = WebMessageFormat.Json)]
     Stream Scan();
   }
