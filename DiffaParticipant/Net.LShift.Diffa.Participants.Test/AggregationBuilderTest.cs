@@ -73,5 +73,56 @@ namespace Net.LShift.Diffa.Participants.Test {
       Assert.AreEqual(1, builder.ToList().Count);
       Assert.That(builder.ToList()[0], Is.InstanceOf(typeof(ByNameCategoryFunction)));
     }
+
+    [Test]
+    public void ShouldInvalidGranularityExceptionWhenGranularityValueIsBad() {
+      var req = new NameValueCollection();
+      req.Add("bizDate-granularity", "invalid");
+      var builder = new AggregationBuilder(req);
+
+      try {
+        builder.MaybeAddDateAggregation("bizDate");
+        Assert.Fail("Should have thrown InvalidGranularityException");
+      } catch (InvalidGranularityException ex) {
+        Assert.AreEqual("The aggregation value 'invalid' is not valid for the field 'bizDate'", ex.Message);
+      }
+    }
+
+    [Test]
+    public void ShouldAddByIntegerAggregationWhenParameterIsAvailable() {
+      var req = new NameValueCollection { { "someInt-granularity", "100s" } };
+      var builder = new AggregationBuilder(req);
+
+      builder.MaybeAddIntegerAggregation("someInt");
+      Assert.AreEqual(1, builder.ToList().Count);
+      Assert.That(builder.ToList()[0], Is.InstanceOf(typeof(IntegerCategoryFunction)));
+      Assert.AreEqual(100, ((IntegerCategoryFunction)builder.ToList()[0]).Denominator);
+    }
+
+    [Test]
+    public void ShouldThrowInvalidGranularityExceptionWhenCompletelyInvalidIntegerGranularityIsGiven() {
+      var req = new NameValueCollection { { "someInt-granularity", "blah" } };
+      var builder = new AggregationBuilder(req);
+
+      try {
+        builder.MaybeAddIntegerAggregation("someInt");
+        Assert.Fail("Should have thrown InvalidGranularityException");
+      } catch (InvalidGranularityException ex) {
+        Assert.AreEqual("The aggregation value 'blah' is not valid for the field 'someInt'", ex.Message);
+      }
+    }
+
+    [Test]
+    public void ShouldThrowInvalidGranularityExceptionWhenBadNumberedIntegerGranularityIsGiven() {
+      var req = new NameValueCollection { { "someInt-granularity", "10a0s" } };
+      var builder = new AggregationBuilder(req);
+
+      try {
+        builder.MaybeAddIntegerAggregation("someInt");
+        Assert.Fail("Should have thrown InvalidGranularityException");
+      } catch (InvalidGranularityException ex) {
+        Assert.AreEqual("The aggregation value '10a0s' is not valid for the field 'someInt'", ex.Message);
+      }
+    }
   }
 }

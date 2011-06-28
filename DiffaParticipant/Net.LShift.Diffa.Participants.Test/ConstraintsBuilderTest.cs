@@ -110,5 +110,25 @@ namespace Net.LShift.Diffa.Participants.Test {
       var expected = new HashSet<String> { "a", "b", "c" };
       Assert.That(expected, Is.EqualTo(c.Values).AsCollection);
     }
+
+    [Test]
+    public void ShouldBeAbleToAddBothSetAndDateConstraints()
+    {
+      var req = new NameValueCollection { { "someString", "a" }, { "bizDate-start", "2011-06-01" }, { "bizDate-end", "2011-06-30" } };
+      var builder = new ConstraintsBuilder(req);
+
+      builder.MaybeAddSetConstraint("someString");
+      builder.MaybeAddDateRangeConstraint("bizDate");
+      Assert.AreEqual(2, builder.ToList().Count);
+
+      Assert.IsInstanceOf(typeof(SetQueryConstraint), builder.ToList()[0]);
+      var sc = (SetQueryConstraint)builder.ToList()[0];
+      Assert.That(new HashSet<String> { "a" }, Is.EqualTo(sc.Values).AsCollection);
+
+      Assert.IsInstanceOf(typeof(DateRangeQueryConstraint), builder.ToList()[1]);
+      var c = (DateRangeQueryConstraint)builder.ToList()[1];
+      Assert.That(new DateTime(2011, 6, 1), Is.EqualTo(c.LowerBound.Value));
+      Assert.That(new DateTime(2011, 6, 30), Is.EqualTo(c.UpperBound.Value));
+    }
   }
 }

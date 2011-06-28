@@ -43,5 +43,7 @@ namespace Net.LShift.Diffa.Participants
                 throw new InvalidAttributeValueException();
             }
         }
+
+        public int Denominator { get { return _denominator; } }
     }
 }

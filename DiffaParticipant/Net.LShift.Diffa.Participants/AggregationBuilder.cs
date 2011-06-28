@@ -47,7 +47,7 @@ namespace Net.LShift.Diffa.Participants {
     /// </summary>
     /// <param name="attrName">the name of the attribute</param>
     public void MaybeAddDateAggregation(string attrName) {
-      var attrGranularity = req[attrName + "-granularity"];
+      var attrGranularity = GetGranularityValue(attrName);
       if (attrGranularity != null) {
         switch (attrGranularity) {
           case "daily": 
@@ -59,6 +59,8 @@ namespace Net.LShift.Diffa.Participants {
           case "yearly":
             result.Add(new YearlyCategoryFunction(attrName));
             break;
+          default:
+            throw new InvalidGranularityException(attrName, attrGranularity);
         }
       }
     }
@@ -68,10 +70,36 @@ namespace Net.LShift.Diffa.Participants {
     /// </summary>
     /// <param name="attrName">the name of the attribute</param>
     public void MaybeAddByNameAggregation(string attrName) {
-      var attrGranularity = req[attrName + "-granularity"];
+      var attrGranularity = GetGranularityValue(attrName);
       if (attrGranularity != null && attrGranularity == "by-name") {
         result.Add(new ByNameCategoryFunction(attrName));
       }
+    }
+
+    /// <summary>
+    /// Attempt to add an integer aggregation for the given attribute.
+    /// </summary>
+    /// <param name="attrName">the name of the attribute</param>
+    public void MaybeAddIntegerAggregation(string attrName) {
+      var attrGranularity = GetGranularityValue(attrName);
+      if (attrGranularity != null) {
+        if (!attrGranularity.EndsWith("s")) throw new InvalidGranularityException(attrName, attrGranularity);
+
+        int denominator;
+        if (!int.TryParse(attrGranularity.Substring(0, attrGranularity.Length - 1), out denominator))
+          throw new InvalidGranularityException(attrName, attrGranularity);
+
+        result.Add(new IntegerCategoryFunction(attrName, denominator));
+      }
+    }
+
+    /// <summary>
+    /// Attempts to retrieve the granularity value for the given field.
+    /// </summary>
+    /// <param name="attrName">the attribute name</param>
+    /// <returns>the granularity value, or null if it isn't present</returns>
+    private string GetGranularityValue(string attrName) {
+      return req[attrName + "-granularity"];
     }
   }
 }

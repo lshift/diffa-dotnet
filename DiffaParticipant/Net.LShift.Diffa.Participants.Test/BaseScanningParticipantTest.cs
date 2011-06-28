@@ -105,6 +105,19 @@ namespace Net.LShift.Diffa.Participants.Test {
     }
 
     [Test]
+    public void ShouldGenerate400ErrorOnBadGranularity()
+    {
+      try {
+        ExecuteScan("bizDate-granularity=blah");
+        Assert.Fail("Should have thrown WebException");
+      } catch(WebException ex) {
+        Assert.AreEqual(HttpStatusCode.BadRequest, ((HttpWebResponse) ex.Response).StatusCode);
+        Assert.AreEqual("The aggregation value 'blah' is not valid for the field 'bizDate'", ReadResponseBody((HttpWebResponse)ex.Response));
+        Assert.AreEqual("text/plain", ex.Response.ContentType);
+      }
+    }
+
+    [Test]
     public void ShouldBucketEntriesByDate() {
       var result = ExecuteScan("bizDate-granularity=daily");
       var objs = SortByBizDateAndBook(result);
@@ -217,7 +230,7 @@ namespace Net.LShift.Diffa.Participants.Test {
       if (resp.StatusCode != HttpStatusCode.OK)
         throw new Exception(string.Format("Unexpected non-200 response: {0}", resp.StatusCode));
 
-      return JArray.Parse(new StreamReader(resp.GetResponseStream()).ReadToEnd());
+      return JArray.Parse(ReadResponseBody(resp));
     }
 
     private static JArray SortById(IEnumerable<JToken> objs) {
@@ -250,6 +263,10 @@ namespace Net.LShift.Diffa.Participants.Test {
 
     private static void AssertJsonEqual(JArray expected, JArray actual) {
       Assert.AreEqual(expected.ToString(), actual.ToString(), string.Format("{0} is not the same as {1}", expected, actual));
+    }
+
+    private static string ReadResponseBody(HttpWebResponse resp) {
+      return new StreamReader(resp.GetResponseStream()).ReadToEnd();
     }
   }
 
