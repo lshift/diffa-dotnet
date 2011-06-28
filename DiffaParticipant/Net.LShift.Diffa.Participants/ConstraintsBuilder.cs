@@ -83,6 +83,18 @@ namespace Net.LShift.Diffa.Participants {
     }
 
     /// <summary>
+    /// Attempts to add a string prefix constraint for the given value. The constraint will be added if
+    /// [attrName]-prefix is present in the request.
+    /// </summary>
+    /// <param name="attrName">the name of the attribute</param>
+    public void MaybeAddPrefixConstraint(string attrName) {
+      string prefix = _reqParams.Get(attrName + "-prefix");
+      if (prefix != null) {
+        _result.Add(new PrefixQueryConstraint(attrName, prefix));
+      }
+    }
+
+    /// <summary>
     /// Maybe retrieves a given field and parses a date/datetime query constraint bound.
     /// </summary>
     /// <param name="field">the name of the field being parsed</param>

@@ -112,6 +112,30 @@ namespace Net.LShift.Diffa.Participants
     }
 
     /// <summary>
+    /// Represents a query constraint where a field's string value should start with the given prefix.
+    /// </summary>
+    public class PrefixQueryConstraint : IQueryConstraint {
+        public string Category { get; private set; }
+        public string Prefix { get; private set; }
+
+        public PrefixQueryConstraint(string category, string prefix) {
+            Category = category;
+            Prefix = prefix;
+        }
+
+        public override string ToString() 
+        {
+          return "PrefixQueryConstraint(DataType=" + Category + ", Prefix=" + Prefix + ")";
+        }
+
+        public bool Includes(string val) {
+          if (val == null) return false;
+
+          return val.StartsWith(Prefix);
+        }
+    }
+
+    /// <summary>
     /// Represents a range with no bounds
     /// </summary>
     public class UnboundedRangeQueryConstraint : IQueryConstraint

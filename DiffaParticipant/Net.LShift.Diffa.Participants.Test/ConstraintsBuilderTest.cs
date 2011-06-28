@@ -160,5 +160,19 @@ namespace Net.LShift.Diffa.Participants.Test {
       Assert.That(new DateTime(2011, 6, 1), Is.EqualTo(c.LowerBound.Value));
       Assert.That(new DateTime(2011, 6, 30), Is.EqualTo(c.UpperBound.Value));
     }
+
+    [Test]
+    public void ShouldAddPrefixConstraintWhenValueIsPresent() {
+      var req = new NameValueCollection();
+      req["someString-prefix"] = "abc";
+      var builder = new ConstraintsBuilder(req);
+
+      builder.MaybeAddPrefixConstraint("someString");
+      Assert.AreEqual(1, builder.ToList().Count);
+      Assert.IsInstanceOf(typeof(PrefixQueryConstraint), builder.ToList()[0]);
+
+      var c = (PrefixQueryConstraint)builder.ToList()[0];
+      Assert.AreEqual("abc", c.Prefix);
+    }
   }
 }
