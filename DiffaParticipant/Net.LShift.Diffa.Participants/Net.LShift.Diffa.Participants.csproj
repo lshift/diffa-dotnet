@@ -53,6 +53,7 @@
     <Compile Include="DigestBuilder.cs" />
     <Compile Include="ActionInvocation.cs" />
     <Compile Include="EntityContentRequest.cs" />
+    <Compile Include="InvalidConstraintException.cs" />
     <Compile Include="InvalidGranularityException.cs" />
     <Compile Include="InvalidScanRequestException.cs" />
     <Compile Include="ScanResultEntry.cs" />

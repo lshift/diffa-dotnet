@@ -14,8 +14,10 @@
 // limitations under the License.
 //
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 
 namespace Net.LShift.Diffa.Participants {
   /// <summary>
@@ -45,8 +47,8 @@ namespace Net.LShift.Diffa.Participants {
     /// </summary>
     /// <param name="attrName">the name of the attribute</param>
     public void MaybeAddDateRangeConstraint(string attrName) {
-      string startVal = _reqParams.Get(attrName + "-start");
-      string endVal = _reqParams.Get(attrName + "-end");
+      var startVal = RetrieveAndParseDateTimeBound(attrName + "-start");
+      var endVal = RetrieveAndParseDateTimeBound(attrName + "-end");
 
       if (startVal != null || endVal != null) {
         _result.Add(new DateRangeQueryConstraint(attrName, startVal, endVal));
@@ -59,8 +61,8 @@ namespace Net.LShift.Diffa.Participants {
     /// </summary>
     /// <param name="attrName">the name of the attribute</param>
     public void MaybeAddTimeRangeConstraint(string attrName) {
-      string startVal = _reqParams.Get(attrName + "-start");
-      string endVal = _reqParams.Get(attrName + "-end");
+      var startVal = RetrieveAndParseDateTimeBound(attrName + "-start");
+      var endVal = RetrieveAndParseDateTimeBound(attrName + "-end");
 
       if (startVal != null || endVal != null) {
         _result.Add(new DateRangeQueryConstraint(attrName, startVal, endVal));
@@ -78,6 +80,24 @@ namespace Net.LShift.Diffa.Participants {
       if (values != null && values.Length > 0) {
         _result.Add(new SetQueryConstraint(attrName, new HashSet<string>(values)));
       }
+    }
+
+    /// <summary>
+    /// Maybe retrieves a given field and parses a date/datetime query constraint bound.
+    /// </summary>
+    /// <param name="field">the name of the field being parsed</param>
+    /// <returns>the parsed date, or null if the dateStr was null</returns>
+    private DateTime? RetrieveAndParseDateTimeBound(string field) {
+      string dateStr = _reqParams.Get(field);
+
+      if (dateStr == null) {
+        return null;
+      }
+
+      DateTime result;
+      if (!DateTime.TryParse(dateStr, null, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out result))
+        throw new InvalidConstraintException(field, dateStr);
+      return result;
     }
   }
 }

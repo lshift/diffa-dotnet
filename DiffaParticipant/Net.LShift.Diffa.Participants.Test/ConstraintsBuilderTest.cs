@@ -67,6 +67,36 @@ namespace Net.LShift.Diffa.Participants.Test {
     }
 
     [Test]
+    public void ShouldThrowInvalidConstraintExceptionWhenBadStartDateIsGiven() {
+      var req = new NameValueCollection();
+      req["bizDate-start"] = "abc";
+      req["bizDate-end"] = "2011-06-30";
+      var builder = new ConstraintsBuilder(req);
+
+      try {
+        builder.MaybeAddDateRangeConstraint("bizDate");
+        Assert.Fail("Should have thrown InvalidConstraintException");
+      } catch (InvalidConstraintException ex) {
+        Assert.AreEqual("The constraint value 'abc' is not valid for the field 'bizDate-start'", ex.Message);
+      }
+    }
+
+    [Test]
+    public void ShouldThrowInvalidConstraintExceptionWhenBadEndDateIsGiven() {
+      var req = new NameValueCollection();
+      req["bizDate-start"] = "2011-06-01";
+      req["bizDate-end"] = "abc";
+      var builder = new ConstraintsBuilder(req);
+
+      try {
+        builder.MaybeAddDateRangeConstraint("bizDate");
+        Assert.Fail("Should have thrown InvalidConstraintException");
+      } catch (InvalidConstraintException ex) {
+        Assert.AreEqual("The constraint value 'abc' is not valid for the field 'bizDate-end'", ex.Message);
+      }
+    }
+
+    [Test]
     public void ShouldAddTimeRangeConstraintWhenBothStartAndEndArePresent() {
       var req = new NameValueCollection();
       req["createTime-start"] = "2011-06-06T12:00:00.000Z";
