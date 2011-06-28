@@ -31,6 +31,8 @@ namespace Net.LShift.Diffa.Participants
     }
 
     public override string OwningPartition(string value) {
+      if (value.Length < Length) return value;
+
       return value.Substring(0, Length);
     }
   }
