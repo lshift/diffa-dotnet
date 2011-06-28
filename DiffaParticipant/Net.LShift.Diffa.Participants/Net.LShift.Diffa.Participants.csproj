@@ -56,6 +56,7 @@
     <Compile Include="InvalidConstraintException.cs" />
     <Compile Include="InvalidGranularityException.cs" />
     <Compile Include="InvalidScanRequestException.cs" />
+    <Compile Include="PrefixCategoryFunction.cs" />
     <Compile Include="ScanResultEntry.cs" />
     <Compile Include="Utils\AttributesUtils.cs" />
     <Compile Include="Utils\DigestUtils.cs" />

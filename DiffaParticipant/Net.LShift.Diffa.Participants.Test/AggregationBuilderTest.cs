@@ -89,7 +89,7 @@ namespace Net.LShift.Diffa.Participants.Test {
     }
 
     [Test]
-    public void ShouldAddByIntegerAggregationWhenParameterIsAvailable() {
+    public void ShouldAddIntegerAggregationWhenParameterIsAvailable() {
       var req = new NameValueCollection { { "someInt-granularity", "100s" } };
       var builder = new AggregationBuilder(req);
 
@@ -122,6 +122,30 @@ namespace Net.LShift.Diffa.Participants.Test {
         Assert.Fail("Should have thrown InvalidGranularityException");
       } catch (InvalidGranularityException ex) {
         Assert.AreEqual("The aggregation value '10a0s' is not valid for the field 'someInt'", ex.Message);
+      }
+    }
+
+    [Test]
+    public void ShouldAddPrefixAggregationWhenParameterIsAvailable() {
+      var req = new NameValueCollection { { "someString-length", "5" } };
+      var builder = new AggregationBuilder(req);
+
+      builder.MaybeAddPrefixAggregation("someString");
+      Assert.AreEqual(1, builder.ToList().Count);
+      Assert.That(builder.ToList()[0], Is.InstanceOf(typeof(PrefixCategoryFunction)));
+      Assert.AreEqual(5, ((PrefixCategoryFunction)builder.ToList()[0]).Length);
+    }
+
+    [Test]
+    public void ShouldThrowInvalidGranularityExceptionWhenPrefixLengthIsntANumber() {
+      var req = new NameValueCollection { { "someString-length", "blah" } };
+      var builder = new AggregationBuilder(req);
+
+      try {
+        builder.MaybeAddPrefixAggregation("someString");
+        Assert.Fail("Should have thrown InvalidGranularityException");
+      } catch (InvalidGranularityException ex) {
+        Assert.AreEqual("The aggregation value 'blah' is not valid for the field 'someString'", ex.Message);
       }
     }
   }

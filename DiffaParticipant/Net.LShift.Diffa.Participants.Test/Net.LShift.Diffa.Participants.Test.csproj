@@ -51,6 +51,7 @@
     <Compile Include="IntegerCategoryFunctionTest.cs" />
     <Compile Include="DigestBuilderDateBucketingTest.cs" />
     <Compile Include="DigestBuilderIntegerBucketingTest.cs" />
+    <Compile Include="PrefixCategoryFunctionTest.cs" />
     <Compile Include="PrefixQueryConstraintTest.cs" />
     <Compile Include="QueryAggregateDigestsRequestTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

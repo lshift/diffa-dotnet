@@ -94,6 +94,21 @@ namespace Net.LShift.Diffa.Participants {
     }
 
     /// <summary>
+    /// Attempt to add a string prefix aggregation for the given attribute. 
+    /// </summary>
+    /// <param name="attrName"></param>
+    public void MaybeAddPrefixAggregation(string attrName) {
+      var prefixLength = req[attrName + "-length"];
+      if (prefixLength != null) {
+        int length;
+        if (!int.TryParse(prefixLength, out length))
+          throw new InvalidGranularityException(attrName, prefixLength);
+
+        result.Add(new PrefixCategoryFunction(attrName, length));
+      }
+    }
+
+    /// <summary>
     /// Attempts to retrieve the granularity value for the given field.
     /// </summary>
     /// <param name="attrName">the attribute name</param>
