@@ -18,22 +18,24 @@ using NUnit.Framework;
 
 namespace Net.LShift.Diffa.Participants.Test
 {
-    [TestFixture]
-    class DateCategoryFunctionTest
-    {
-        [Test]
-        public void OwningPartitionNameShouldEqualBaseOfPartitionRange()
-        {
-            var categoryFunction = new MonthlyCategoryFunction("bizDate");
-            Assert.AreEqual("2010-06", categoryFunction.OwningPartition("2010-06-05"));
-        }
+  [TestFixture]
+  public class PrefixCategoryFunctionTest {
+    [Test]
+    public void ShouldPartitionStrings() {
+      var f = new PrefixCategoryFunction("someString", 2);
 
-        [Test]
-        [ExpectedException(typeof(InvalidAttributeValueException))]
-        public void ShouldThrowInvalidAttributeExceptionWhenValueDoesNotParseToInteger()
-        {
-          var categoryFunction = new MonthlyCategoryFunction("bizDate");
-          categoryFunction.OwningPartition("NOT_A_DATE");
-        }
+      Assert.AreEqual("sa", f.OwningPartition("saw"));
+      Assert.AreEqual("do", f.OwningPartition("dog"));
+      Assert.AreEqual("ca", f.OwningPartition("cat"));
     }
+
+    [Test]
+    public void ShouldPrefixTooShortStringWithAllOfItsCharacters() {
+      var f = new PrefixCategoryFunction("someString", 4);
+
+      Assert.AreEqual("saw", f.OwningPartition("saw"));
+      Assert.AreEqual("dog", f.OwningPartition("dog"));
+      Assert.AreEqual("cat", f.OwningPartition("cat"));
+    }
+  }
 }

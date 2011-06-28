@@ -14,24 +14,23 @@
 // limitations under the License.
 //
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.ServiceModel;
+using System.ServiceModel.Web;
+using System.Text;
+
 namespace Net.LShift.Diffa.Participants
 {
-    /// <summary>
-    /// This function partitions based on a set of attribute names which individually form single level buckets
-    /// </summary>
-    public class ByNameCategoryFunction : BaseCategoryFunction
-    {
-        public ByNameCategoryFunction(string attributeName) : base(attributeName) {
-        }
-
-        public override string Name
-        {
-            get { return "by name"; }
-        }
-
-        public override string OwningPartition(string value)
-        {
-            return value;
-        }
-    }
+  /// <summary>
+  /// Service Contract definition for a scanning participant.
+  /// </summary>
+  [ServiceContract(Namespace = "Net.LShift.Diffa")]
+  public interface IScanningParticipantContract {
+    [OperationContract] 
+    [WebGet(UriTemplate = "", ResponseFormat = WebMessageFormat.Json)]
+    Stream Scan();
+  }
 }

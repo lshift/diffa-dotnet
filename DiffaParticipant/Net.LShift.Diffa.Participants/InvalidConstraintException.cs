@@ -14,24 +14,10 @@
 // limitations under the License.
 //
 
-namespace Net.LShift.Diffa.Participants
-{
-    /// <summary>
-    /// This function partitions based on a set of attribute names which individually form single level buckets
-    /// </summary>
-    public class ByNameCategoryFunction : BaseCategoryFunction
-    {
-        public ByNameCategoryFunction(string attributeName) : base(attributeName) {
-        }
-
-        public override string Name
-        {
-            get { return "by name"; }
-        }
-
-        public override string OwningPartition(string value)
-        {
-            return value;
-        }
+namespace Net.LShift.Diffa.Participants {
+  public class InvalidConstraintException : InvalidScanRequestException {
+    public InvalidConstraintException(string field, string value) :
+      base(string.Format("The constraint value '{0}' is not valid for the field '{1}'", value, field)) {
     }
+  }
 }

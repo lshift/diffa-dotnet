@@ -14,24 +14,19 @@
 // limitations under the License.
 //
 
-namespace Net.LShift.Diffa.Participants
-{
-    /// <summary>
-    /// This function partitions based on a set of attribute names which individually form single level buckets
-    /// </summary>
-    public class ByNameCategoryFunction : BaseCategoryFunction
-    {
-        public ByNameCategoryFunction(string attributeName) : base(attributeName) {
-        }
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-        public override string Name
-        {
-            get { return "by name"; }
-        }
+namespace Net.LShift.Diffa.Participants {
+  public abstract class BaseCategoryFunction : ICategoryFunction {
+    public abstract string Name { get; }
+    public string AttributeName { get; private set; }
+    public abstract string OwningPartition(string value);
 
-        public override string OwningPartition(string value)
-        {
-            return value;
-        }
+    public BaseCategoryFunction(string attributeName) {
+      AttributeName = attributeName;
     }
+  }
 }

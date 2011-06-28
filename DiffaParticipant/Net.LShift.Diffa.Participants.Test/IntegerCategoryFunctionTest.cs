@@ -24,7 +24,7 @@ namespace Net.LShift.Diffa.Participants.Test
         [Test]
         public void OwningPartitionNameShouldEqualBaseOfPartitionRange()
         {
-            var categoryFunction = new IntegerCategoryFunction(100);
+            var categoryFunction = new IntegerCategoryFunction("someInt", 100);
             Assert.AreEqual("200", categoryFunction.OwningPartition("234"));
         }
 
@@ -32,14 +32,14 @@ namespace Net.LShift.Diffa.Participants.Test
         [ExpectedException(typeof (InvalidAttributeValueException))]
         public void ShouldThrowInvalidAttributeExceptionWhenValueDoesNotParseToInteger()
         {
-            var categoryFunction = new IntegerCategoryFunction(100);
+            var categoryFunction = new IntegerCategoryFunction("someInt", 100);
             categoryFunction.OwningPartition("NOT_AN_INTEGER");
         }
 
         [Test]
         public void NameShouldBeBasedOnDenominator()
         {
-            var categoryFunction = new IntegerCategoryFunction(100);
+            var categoryFunction = new IntegerCategoryFunction("someInt", 100);
             Assert.AreEqual("100s", categoryFunction.Name);
         }
     }
