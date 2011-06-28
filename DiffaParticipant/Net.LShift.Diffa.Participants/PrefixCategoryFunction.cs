@@ -16,22 +16,24 @@
 
 namespace Net.LShift.Diffa.Participants
 {
-    /// <summary>
-    /// This function partitions based on a set of attribute names which individually form single level buckets
-    /// </summary>
-    public class ByNameCategoryFunction : BaseCategoryFunction
-    {
-        public ByNameCategoryFunction(string attributeName) : base(attributeName) {
-        }
+  /// <summary>
+  /// Category function that takes the initial <code>length</code> characters of a string.
+  /// </summary>
+  public class PrefixCategoryFunction : BaseCategoryFunction {
+    public int Length { get; private set; }
 
-        public override string Name
-        {
-            get { return "by name"; }
-        }
-
-        public override string OwningPartition(string value)
-        {
-            return value;
-        }
+    public PrefixCategoryFunction(string attributeName, int length) : base(attributeName) {
+      Length = length;
     }
+
+    public override string Name {
+      get { return "prefix(" + Length + ")"; }
+    }
+
+    public override string OwningPartition(string value) {
+      if (value.Length < Length) return value;
+
+      return value.Substring(0, Length);
+    }
+  }
 }

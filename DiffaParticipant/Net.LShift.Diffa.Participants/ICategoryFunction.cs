@@ -20,7 +20,15 @@ namespace Net.LShift.Diffa.Participants
 {
     public interface ICategoryFunction
     {
+        /// <summary>
+        /// The name of this function.
+        /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// The name of the attribute that this function is being applied to. 
+        /// </summary>
+        string AttributeName { get;  }
 
         /// <summary>
         /// Given a value from the value domain, returns the name of the partition to which it belongs.

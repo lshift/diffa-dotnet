@@ -14,24 +14,18 @@
 // limitations under the License.
 //
 
+using System;
+
 namespace Net.LShift.Diffa.Participants
 {
-    /// <summary>
-    /// This function partitions based on a set of attribute names which individually form single level buckets
-    /// </summary>
-    public class ByNameCategoryFunction : BaseCategoryFunction
-    {
-        public ByNameCategoryFunction(string attributeName) : base(attributeName) {
-        }
-
-        public override string Name
-        {
-            get { return "by name"; }
-        }
-
-        public override string OwningPartition(string value)
-        {
-            return value;
-        }
+  /// <summary>
+  /// Exception indicating that a Diffa scan request was invalid.
+  /// </summary>
+  public class InvalidScanRequestException : Exception {
+    public InvalidScanRequestException(string message) : base(message) {
     }
+
+    public InvalidScanRequestException(string message, Exception innerException) : base(message, innerException) {
+    }
+  }
 }

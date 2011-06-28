@@ -35,6 +35,8 @@
     <Reference Include="nunit.framework, Version=2.5.4.10098, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,10 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregationBuilderTest.cs" />
+    <Compile Include="BaseScanningParticipantTest.cs" />
+    <Compile Include="ConstraintsBuilderTest.cs" />
     <Compile Include="DateCategoryFunctionTest.cs" />
     <Compile Include="IntegerCategoryFunctionTest.cs" />
     <Compile Include="DigestBuilderDateBucketingTest.cs" />
     <Compile Include="DigestBuilderIntegerBucketingTest.cs" />
+    <Compile Include="PrefixCategoryFunctionTest.cs" />
+    <Compile Include="PrefixQueryConstraintTest.cs" />
     <Compile Include="QueryAggregateDigestsRequestTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryEntityVersionsRequestTest.cs" />
