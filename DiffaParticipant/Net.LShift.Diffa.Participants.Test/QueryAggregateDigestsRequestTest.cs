@@ -46,9 +46,9 @@ namespace Net.LShift.Diffa.Participants.Test
             Assert.AreEqual("yearly", request.Buckets["bizDate"]);
             Assert.AreEqual("bizDate", request.Constraints[0].Category);
             Assert.AreEqual(null, request.Constraints[0].Values);
-            Assert.AreEqual(new DateTime(2011, 1, 1), DateTime.Parse(request.Constraints[0].Attributes["lower"]));
+            Assert.AreEqual(new DateTime(2011, 1, 1), DateTime.Parse(request.Constraints[0].Attributes["lower"]).ToUniversalTime());
             Assert.AreEqual(new DateTime(2011, 12, 31, 23, 59, 59, 999),
-                            DateTime.Parse(request.Constraints[0].Attributes["upper"]));
+                            DateTime.Parse(request.Constraints[0].Attributes["upper"]).ToUniversalTime());
         }
 
         [Test]
