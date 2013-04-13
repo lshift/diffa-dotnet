@@ -48,7 +48,7 @@ namespace Net.LShift.Diffa.Participants
     public JObject ToJObject() {
       var result = new JObject();
       if (ID != null) result.Add("id", ID);
-      if (LastUpdated != null) result.Add("lastUpdated", LastUpdated.Value.ToString("yyyy-MM-ddTHH:mm:ss.000Z"));
+      if (LastUpdated != null) result.Add("lastUpdated", LastUpdated.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz"));
       if (Version != null) result.Add("version", Version);
       if (Attributes != null) result.Add("attributes", JObject.FromObject(Attributes));
 
