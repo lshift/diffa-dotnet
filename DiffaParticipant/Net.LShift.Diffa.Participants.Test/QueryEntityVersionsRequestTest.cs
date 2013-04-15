@@ -40,9 +40,9 @@ namespace Net.LShift.Diffa.Participants.Test
 
             Assert.AreEqual("bizDate", request.Constraints[0].Category);
             Assert.AreEqual(null, request.Constraints[0].Values);
-            Assert.AreEqual(new DateTime(2011, 1, 1), DateTime.Parse(request.Constraints[0].Attributes["lower"]));
+            Assert.AreEqual(new DateTime(2011, 1, 1), DateTime.Parse(request.Constraints[0].Attributes["lower"]).ToUniversalTime());
             Assert.AreEqual(new DateTime(2011, 12, 31, 23, 59, 59, 999),
-                            DateTime.Parse(request.Constraints[0].Attributes["upper"]));
+                            DateTime.Parse(request.Constraints[0].Attributes["upper"]).ToUniversalTime());
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace Net.LShift.Diffa.Participants.Test
             var expected = JArray.Parse(jsonString);
             var queryEntityVersionsResponse = new QueryEntityVersionsResponse(
                 new List<EntityVersion> {
-                    new EntityVersion("abc", new List<string> {"2011-02-06T15:37:54.812Z"}, new DateTime(2011, 2, 6, 15, 37, 0), "vsn_abcdef")
+                    new EntityVersion("abc", new List<string> {"2011-02-06T15:37:54.812Z"}, new DateTime(2011, 2, 6, 15, 37, 0, 0, DateTimeKind.Utc), "vsn_abcdef")
                 });
 
             Assert.AreEqual(expected.ToString(), queryEntityVersionsResponse.ToJArray().ToString());
